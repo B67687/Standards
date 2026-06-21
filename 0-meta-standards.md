@@ -40,6 +40,15 @@ README is the most public-facing file. It must not reference:
 
 The README should describe what the project IS and how to USE it — not how it's BUILT internally.
 
+## Removing Evidence of Cleaning
+
+When files are removed from history or moved to local-only, all evidence of the operation must be cleaned:
+
+- **Commit messages** must not reference the removed content. "chore: remove review.sh" tells readers review.sh once existed. Use neutral messages like "chore: update config" or batch into general housekeeping commits.
+- **READMEs** must not reference files that no longer exist on GitHub (review.sh, .github/workflows/).
+- **Config files** must not mention local-only files by name (see .gitignore principles).
+- **Changelogs** must not log infrastructure changes that expose internal tooling. A changelog is for users, not maintainers.
+
 ## When to Add
 
 Add content only when:
