@@ -90,7 +90,7 @@ Co-Authored-By: DeepSeek V4 Flash via oh-my-openagent
 
 ## Badge Implementation
 
-AI attribution is also **visual** — badges in the README header show which models and harnesses a project uses at a glance.
+AI attribution is also **visual** — badges grouped under the "Built with AI assistance" line in the README show which models and harnesses a project uses at a glance.
 
 ### Badge Format
 
@@ -114,12 +114,46 @@ Generate badges using `scripts/generate-badge.sh` per the [badge-standard.md](./
 | MiniMax | `#f43f5e` (rose) |
 | GLM | `#f97316` (orange) |
 
-### Badge Order in README
+### Badge Placement in README
 
-Per badge-standard.md density rules (max 6 badges), AI attribution badges come at priority **4 (Model)** and **5 (Harness)** in the badge header:
+AI model badges go **after** the "Built with AI assistance" attribution line, **not mixed in with tech badges** (CI status, language, license). This separates *what the project is* (tech badges in header) from *how it was made* (AI badges under attribution).
+
+Per badge-standard.md density rules (max 6 total badges across both groups):
 
 ```
-Priority: CI > Tech > License > AI Model(s) > AI Harness > Metrics
+Tech badge header:  CI > Tech > License             (max 3-4)
+AI attribution:     AI Model(s) > AI Harness(s)      (max 2-3)
+```
+
+Example in README:
+
+```html
+<div align="center">
+
+# Project Name
+
+<!-- Tech badges (what it is) -->
+<p align="center">
+  <img src="docs/badges/rust.svg" alt="Rust" />
+  <img src="docs/badges/license.svg" alt="MIT" />
+  <img src="https://github.com/org/repo/actions/.../badge.svg" alt="CI">
+</p>
+
+Short description (≤120 chars)
+
+</div>
+
+Built with AI assistance — see [CREDITS.md](./CREDITS.md).
+
+<!-- AI model badges (how it was made) -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/deepseek-dark.svg">
+  <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash" />
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/opencode-harness-dark.svg">
+  <img src="docs/badges/opencode-harness.svg" alt="OpenCode harness" />
+</picture>
 ```
 
 ### Generator Commands
@@ -165,7 +199,7 @@ This standard is **recommended** for all repos. Not commitlint-enforced (trailer
 - Is `Co-Authored-By:` present in AI-assisted commits?
 - Does the email use `.local` domain (not a real GitHub account)?
 - Is the model identifier specific enough to be useful?
-- Are AI model badges present in the README header?
+- Are AI model badges present under the attribution line in README?
 
 ## CLI Shortcut
 

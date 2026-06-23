@@ -22,15 +22,15 @@ Short description (≤120 chars, no heading)
 ## Section Order
 
 ```
-1. Title (H1)
-2. Badges (centered row — tech stack, license, AI attribution)
-3. Short Description (≤120 chars, no heading, on its own line)
-4. AI Attribution ("Built with AI assistance — see CREDITS.md")
-5. Screenshots / Demo (apps only — near top)
-6. Table of Contents (required if >100 lines)
-7. Features / What It Does
-8. Quick Start / Installation
-9. Usage / Examples
+ 1. Title (H1)
+ 2. Tech Badges (centered row — CI status, language/tech stack, license)
+ 3. Short Description (≤120 chars, no heading, on its own line)
+ 4. AI Attribution + AI Model Badges ("Built with AI assistance" + model/harness badges)
+ 5. Screenshots / Demo (apps only — near top)
+ 6. Table of Contents (required if >100 lines)
+ 7. Features / What It Does
+ 8. Quick Start / Installation
+ 9. Usage / Examples
 10. Architecture (libraries/harnesses — with SVG diagram)
 11. Contributing (required — state PR policy, where to ask questions)
 12. Optional sections (any order): Development, Testing, API, Config, Privacy, FAQ
@@ -38,23 +38,46 @@ Short description (≤120 chars, no heading)
 14. License (ALWAYS LAST)
 ```
 
-## Badge Header
+## Tech Badge Header
 
-Badges are centered `<img>` tags, placed directly under the title:
+Tech badges (CI status, language/tech stack, license) are centered `<img>` tags, placed directly under the title. AI model badges go under the attribution line (see next section).
 
 ```html
+<div align="center">
+
+# Project Name
+
 <p align="center">
   <img src="docs/badges/kotlin.svg" alt="Kotlin" />
   <img src="docs/badges/license.svg" alt="MIT" />
-  <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash" />
-  <br />
-  <sub
-    >Built with AI assistance — see <a href="./CREDITS.md">CREDITS.md</a></sub
-  >
+  <img src="https://github.com/org/repo/actions/workflows/ci.yml/badge.svg" alt="CI">
 </p>
+
+Short description (≤120 chars, no heading)
+
+</div>
 ```
 
-Badge SVGs live in `docs/badges/` and are generated via `scripts/generate-badge.sh`. All badges on the same line must be the same height (20px standard).
+Tech badge SVGs live in `docs/badges/` and are generated via `scripts/generate-badge.sh`. All badges on the same line must be the same height (20px standard).
+
+## AI Attribution Badges
+
+AI model and harness badges go directly under the "Built with AI assistance" line, separating the how-it-was-made badges from the what-it-is tech badges.
+
+```html
+Built with AI assistance — see [CREDITS.md](./CREDITS.md).
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/deepseek-dark.svg">
+  <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash" />
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/opencode-harness-dark.svg">
+  <img src="docs/badges/opencode-harness.svg" alt="OpenCode harness" />
+</picture>
+```
+
+This keeps the badge header clean (2-4 tech badges) while still giving AI attribution visible presence in the README.
 
 ## Dark Mode
 
@@ -109,7 +132,7 @@ These files should exist at repo root alongside README.md (not inside it):
 ### Harness / Framework (e.g. agentic-workflows)
 
 ```
-Title → Badges → Description → AI Attribution →
+Title → Tech Badges → Description → AI Attribution + AI Badges →
 Quick Start → Workflow / Features → Architecture →
 Contributing → Changelog → License
 ```
@@ -119,22 +142,18 @@ Key features: CLI examples, workflow tree, configuration reference, ecosystem di
 ### Library (e.g. ithmb-codec)
 
 ```
-Title → Badges → Description → AI Attribution →
+Title → Tech Badges → Description → AI Attribution + AI Badges →
 Install → Usage → Architecture → Build → Test →
 Contributing → Changelog → License
 ```
 
-Key features: code examples in multiple languages, tests count, SIMD/performance tables.
-
 ### Application (e.g. bus-hop)
 
 ```
-Title → Badges → Description → AI Attribution →
+Title → Tech Badges → Description → AI Attribution + AI Badges →
 Screenshots → Features → Download → Tech Stack →
 Architecture → Contributing → License
 ```
-
-Key features: screenshots near top, download links, privacy section.
 
 ## GitHub Alerts
 
@@ -173,8 +192,8 @@ docs/diagrams/      → SVG architecture diagrams
 
 | Component | Standard | Applies To |
 |-----------|----------|------------|
-| Badges | `docs/badge-standard.md` | README badge header |
-| AI Attribution | `docs/ai-attribution-pattern.md` | CREDITS.md + badge footer |
+| Badges | `docs/badge-standard.md` | README tech badge header |
+| AI Attribution | `docs/ai-attribution-pattern.md` | CREDITS.md + AI attribution badges |
 | SVG Screenshots | `docs/svg-screenshots-standard.md` | Images in Screenshots section |
 | SVG Diagrams | `bus-hop/docs/svg-standards.md` | Architecture diagram section |
 | Changelog | `docs/changelog-standard.md` | Changelog link section |

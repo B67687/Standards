@@ -162,6 +162,26 @@ checks_ai_attribution() {
     _check_fail "readme-badges" "README.md not found"
   fi
 
+  # ── Check 7: AI badges appear after attribution line ───────────────────
+  # Verifies that docs/badges/ references appear on or after the first
+  # "Built with AI assistance" line — not just in the tech badge header.
+  if [ -f "${readme_file}" ]; then
+    local attr_line="" after_has_badges=false
+    attr_line="$(grep -ni 'built with ai\|ai assistance\|credits\.md\|ai attribution' \
+      "${readme_file}" 2>/dev/null | head -1 | cut -d: -f1)"
+    if [ -n "${attr_line}" ]; then
+      after_has_badges=false
+      while IFS= read -r line; do
+        case "${line}" in *docs/badges/*) after_has_badges=true; break ;; esac
+      done < <(sed -n "${attr_line},\$p" "${readme_file}" 2>/dev/null)
+    fi
+    _check "ai-badges-under-attribution" \
+      "AI model badges appear after 'Built with AI assistance' line" \
+      test "${after_has_badges}" = true
+  else
+    _check_fail "ai-badges-under-attribution" "README.md not found"
+  fi
+
   # ── Run fixes if --fix or --force mode ──────────────────────────────────
   if [ "${FIX_MODE}" != "check" ]; then
     fixes_ai_attribution "${repo}"

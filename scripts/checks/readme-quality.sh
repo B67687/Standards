@@ -99,7 +99,7 @@ checks_readme_quality() {
   "check": "section-order",
   "repo": $(_json_str "${repo}"),
   "target": "README.md",
-  "prompt": "Evaluate whether README.md follows the standard section order. The standard order is: 1. Title (H1), 2. Badges, 3. Short Description, 4. AI Attribution, 5. Screenshots/Demo (apps only), 6. Table of Contents (>100 lines), 7. Features, 8. Quick Start, 9. Usage, 10. Architecture, 11. Contributing, 12. Optional sections, 13. Changelog link, 14. License (LAST). Which sections are present, which are missing, which are out of order?",
+  "prompt": "Evaluate whether README.md follows the standard section order. The standard order is: 1. Title (H1), 2. Tech Badges (CI, language/tech stack, license), 3. Short Description, 4. AI Attribution + AI Model Badges ('Built with AI assistance' then model/harness badges), 5. Screenshots/Demo (apps only), 6. Table of Contents (>100 lines), 7. Features, 8. Quick Start, 9. Usage, 10. Architecture, 11. Contributing, 12. Optional sections, 13. Changelog link, 14. License (LAST). Which sections are present, which are missing, which are out of order?",
   "context": {
     "readme_path": $(_json_str "${repo}/README.md"),
     "readme_exists": true
