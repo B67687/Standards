@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build tooling
+        run: sudo apt-get install -y shellcheck && echo "build complete"
+
+      - name: Test — shellcheck
+        run: shellcheck scripts/*.sh scripts/checks/*.sh && echo "test shellcheck"
+
+      - name: Test — self-audit
+        run: ./scripts/audit.sh --exit-code . && echo "test audit"

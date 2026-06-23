@@ -31,8 +31,8 @@ if grep -q "^Co-Authored-By:" "$COMMIT_MSG_FILE" 2>/dev/null; then
 fi
 
 # ── Build trailer ────────────────────────────────────────────────────────
-email_model="$(echo "$model" | tr '[:upper:]' '[:lower:]' | sed 's/ /-/g; s/[^a-z0-9._-]//g')"
-email_harness="$(echo "$harness" | sed 's/ .*//' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9._-]/-/g')"
+email_model="$(echo "$model" | tr '[:upper:]' '[:lower:]' | sed 's/[ \/()]/-/g; s/--*/-/g; s/-$//')"
+email_harness="$(echo "$harness" | sed 's/ (.*)//' | tr '[:upper:]' '[:lower:]' | sed 's/[ \/()]/-/g; s/--*/-/g; s/-$//')"
 
 trailer="Co-Authored-By: $model via $harness <${email_model}+${email_harness}@models.local>"
 

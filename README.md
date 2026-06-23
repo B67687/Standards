@@ -1,32 +1,132 @@
 # Standards
 
-Cross-repo conventions and design system for all projects.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/standards.svg">
+  <img alt="standards-17" src="docs/badges/standards.svg">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/checks.svg">
+  <img alt="checks-89" src="docs/badges/checks.svg">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/deepseek-v4.svg">
+  <img alt="DeepSeek-V4" src="docs/badges/deepseek-v4.svg">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/opencode-harness.svg">
+  <img alt="OpenCode-harness" src="docs/badges/opencode-harness.svg">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/license-mit.svg">
+  <img alt="license-MIT" src="docs/badges/license-mit.svg">
+</picture>
+<img src="https://github.com/B67687/standards/actions/workflows/ci.yml/badge.svg" alt="CI">
 
-## Index
+Cross-repo conventions and audit system for AI-enhanced software projects.
 
-| Standard | File | Status |
-|----------|------|--------|
-| AI Attribution | `ai-attribution-pattern.md` | 🟢 |
-| SVG Diagram Generation | `bus-hop/docs/svg-standards.md` (bus-hop repo) | 🟢 |
-| SVG Badge Generator | `badge-standard.md` | 🟢 |
-| README Structure | `README-standard.md` | 🟢 |
-| CI Pipeline + Config Files | `ci-pipeline-standard.md` | 🟢 |
-| Changelog | `changelog-standard.md` | 🟢 |
-| SVG Screenshots | `svg-screenshots-standard.md` | 🟢 |
-| GitHub Repo Topics | `github-topics-standard.md` | 🟢 |
-| .gitignore (gitaccept) | `gitignore-standard.md` | 🟢 |
-| License | `license-standard.md` | 🟢 |
-| Repository Structure | `repo-structure-standard.md` | 🟢 |
-| Commit Conventions | `commit-conventions-standard.md` | 🟢 |
-| ADR | `adr-standard.md` | 🟢 |
-| Naming Conventions | `naming-conventions-standard.md` | 🟢 |
-| Git History Cleanup | `git-history-cleanup-standard.md` | 🟢 |
-| Agent-First VCS | `agent-first-vcs.md` (bonus/design) | 🟢 |
+**17 standards** defining convention rules for repos. **89 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
-## Master Inventory
+Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
-`cross-repo-standards.md` tracks the status of all standards across all repos.
+## Architecture
 
-## Applying Standards
+```
+standards/
+├── *.md                    # Standard definitions (what + why)
+├── scripts/
+│   ├── audit.sh            # CLI entry point — audit a single repo
+│   ├── audit-lib.sh        # Shared framework: _check, reporter, JSON output
+│   ├── audit-all.sh        # Batch audit across multiple repos
+│   ├── agent-check.sh      # Dispatches agent-eval requests for subjective checks
+│   ├── checks/*.sh         # One file per standard — plugins auto-discovered
+│   └── ...                 # Utility scripts (badge generator, hooks, etc.)
+└── .omo/dashboard/         # Generated audit results + HTML dashboard
+```
 
-See `ci-pipeline-standard.md` for the CI pipeline, `README-standard.md` for README templates, and each individual standard for its specific rules.
+### How it works
+
+1. **Standard documents** (`*-standard.md`) define each convention's rules, rationale, and success criteria.
+2. **Check scripts** (`scripts/checks/*.sh`) implement deterministic tests for each rule — file existence, grep patterns, format validation via shell.
+3. **Agent evals** extend shell checks for subjective judgments (README quality, badge accessibility, SVG correctness). Checks write structured JSON prompts; `agent-check.sh` collects them.
+4. **Audit runner** (`audit.sh`) discovers all check plugins, executes them against a repo, and produces terminal + JSON reports.
+5. **Dashboard** (`audit-all.sh` + `dashboard.sh`) runs batch audits across repos, aggregates into a compliance matrix, and generates a self-contained HTML dashboard.
+
+## Quick start
+
+```bash
+# Audit the current directory
+./scripts/audit.sh
+
+# Audit + auto-fix (CREDITS.md, badges, README attribution)
+./scripts/audit.sh --fix /path/to/repo
+
+# Check a single standard, JSON output, exit 1 on failure
+./scripts/audit.sh --standard ai-attribution --report json --exit-code /path/to/repo
+
+# List all registered standards
+./scripts/audit.sh --list-standards
+
+# Batch audit all repos under a directory
+./scripts/audit-all.sh -d /path/to/projects
+
+# Generate dashboard from batch results
+./scripts/dashboard.sh
+```
+
+## Standards
+
+| Standard | File | Checks |
+|----------|------|-------|
+| AI Attribution | `ai-attribution-standard.md` | 6 |
+| ADR | `adr-standard.md` | 5 |
+| Auto-Commit GitOps | `auto-commit-gitops-standard.md` | 6 |
+| Badge | `badge-standard.md` | 5 |
+| Badge Quality (agent) | `badge-standard.md` | 3 |
+| Changelog | `changelog-standard.md` | 6 |
+| CI Pipeline | `ci-pipeline-standard.md` | 6 |
+| Commit Conventions | `commit-conventions-standard.md` | 5 |
+| Git History Cleanup | `git-history-cleanup-standard.md` | 5 |
+| GitHub Topics | `github-topics-standard.md` | 5 |
+| .gitignore | `gitignore-standard.md` | 6 |
+| License | `license-standard.md` | 4 |
+| Naming Conventions | `naming-conventions-standard.md` | 5 |
+| Path Agnosticism | `path-agnosticism-standard.md` | 4 |
+| README Quality | `README-standard.md` | 8 |
+| Repo Structure | `repo-structure-standard.md` | 6 |
+| SVG Screenshots | `svg-screenshots-standard.md` | 5 |
+
+**Total: 17 standards, 89 checks** (83 shell + 6 agent-pending)
+
+## CI / exit codes
+
+The audit runner returns exit code 1 if any check fails:
+
+```bash
+./scripts/audit.sh --exit-code /path/to/repo && echo "Compliant"
+```
+
+Combine with `--standard <name>` for targeted CI gates.
+
+## Dashboard
+
+Generate the compliance matrix across all repos:
+
+```bash
+./scripts/audit-all.sh -d /path/to/projects
+./scripts/dashboard.sh
+# Open .omo/dashboard/index.html
+```
+
+The dashboard shows per-repo, per-standard compliance with pass/fail/pending cells, a total score column, and a machine-readable `compliance-matrix.json`.
+
+## Design principles
+
+- **Deterministic** — same repo, same result. Shell checks before agent judgment.
+- **Plugin architecture** — drop a `checks/<standard>.sh` file, it auto-registers.
+- **Agnostic** — no hardcoded paths, no machine-specific config. Run from anywhere.
+- **Advisory by default** — audit reports without modifying. `--fix` for remediation.
+- **Exit-code gated** — `--exit-code` for CI enforcement.
+
+## License
+
+MIT — see [LICENSE](./LICENSE).

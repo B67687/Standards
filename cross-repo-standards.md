@@ -348,7 +348,7 @@ Traditional project layout, no harness:
 
 ### Local Repos (not on GitHub)
 
-`~/projects/dev/` contains 28+ additional repos (agent-seed, agent-stack, agent-sessions, agent-ui, agent-concourse, bus-hop, traffic-dashboard, scenic-fetch, open-codex, terax-ai, reality, no-face-scan-app, rss-reader, personal-voice, fengshui, keyboard, fluent-prs, Comfer, random, hugo, image-magick, knowledge-base, math-learning-notes, project-learner-brainstorm, 2002-Combat, design-taste/design-md, zhongyi/nihaisha-tcm, scoops-fork)
+`.dev/` contains 28+ additional repos (agent-seed, agent-stack, agent-sessions, agent-ui, agent-concourse, bus-hop, traffic-dashboard, scenic-fetch, open-codex, terax-ai, reality, no-face-scan-app, rss-reader, personal-voice, fengshui, keyboard, fluent-prs, Comfer, random, hugo, image-magick, knowledge-base, math-learning-notes, project-learner-brainstorm, 2002-Combat, design-taste/design-md, zhongyi/nihaisha-tcm, scoops-fork)
 
 ---
 
@@ -374,8 +374,8 @@ Traditional project layout, no harness:
 
 ## Location
 
-Standards moved to `~/projects/dev/standards/` as their own topic folder.
-Scripts for applying standards are in `~/projects/dev/standards/scripts/`.
+Standards moved to `./` as their own topic folder.
+Scripts for applying standards are in `./scripts/`.
 
 ## Future Candidates (Not Yet Started)
 

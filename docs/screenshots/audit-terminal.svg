@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <rect width="800" height="450" fill="#1a1a2e" rx="8"/>
+  <text x="400" y="60" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="20">Standards Audit Terminal</text>
+  <rect x="40" y="80" width="720" height="340" fill="#0d0d1a" rx="4"/>
+  <text x="60" y="110" fill="#4ec9b0" font-family="monospace" font-size="13">$ ./scripts/audit.sh --report json .</text>
+  <text x="60" y="135" fill="#888" font-family="monospace" font-size="13">{</text>
+  <text x="80" y="155" fill="#ce9178" font-family="monospace" font-size="13">"repo": "/path/to/standards",</text>
+  <text x="80" y="175" fill="#ce9178" font-family="monospace" font-size="13">"results": [</text>
+  <text x="100" y="195" fill="#888" font-family="monospace" font-size="13">{ "status": "pass", "standard": "path-agnosticism", ... },</text>
+  <text x="100" y="215" fill="#888" font-family="monospace" font-size="13">{ "status": "pass", "standard": "naming-conventions", ... },</text>
+  <text x="100" y="235" fill="#6a9955" font-family="monospace" font-size="13">{ "status": "pass", "standard": "readme-quality", ... },</text>
+  <text x="100" y="255" fill="#888" font-family="monospace" font-size="13">{ "status": "fail", "standard": "ci-pipeline", ... },</text>
+  <text x="60" y="280" fill="#888" font-family="monospace" font-size="13">],</text>
+  <text x="80" y="300" fill="#ce9178" font-family="monospace" font-size="13">"summary": {</text>
+  <text x="100" y="320" fill="#ce9178" font-family="monospace" font-size="13">"pass": 65, "fail": 15, "pending": 9</text>
+  <text x="80" y="340" fill="#888" font-family="monospace" font-size="13">}</text>
+  <text x="60" y="360" fill="#888" font-family="monospace" font-size="13">}</text>
+  <text x="60" y="390" fill="#4ec9b0" font-family="monospace" font-size="13">$ echo $?</text>
+  <text x="60" y="410" fill="#f44747" font-family="monospace" font-size="13">1</text>
+</svg>

@@ -1,0 +1,36 @@
+/*
+!/.gitignore
+!/.editorconfig
+!/.commitlintrc.json
+!/.pre-commit-config.yaml
+!/.github/
+!/*.md
+!/docs/
+!/scripts/
+!/HANDOVER.md
+
+# Secrets
+.env
+*.pem
+**/secrets*
+*.key
+
+# Build artifacts
+dist/
+build/
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Audit artifacts (generated)
+.omo/dashboard/
+.omo/audit/
