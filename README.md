@@ -22,7 +22,7 @@
   <source media="(prefers-color-scheme: dark)" srcset="docs/badges/license-mit.svg">
   <img alt="license-MIT" src="docs/badges/license-mit.svg">
 </picture>
-<img src="https://github.com/B67687/standards/actions/workflows/ci.yml/badge.svg" alt="CI">
+<img src="https://github.com/B67687/Standards/actions/workflows/ci.yml/badge.svg" alt="CI">
 
 Cross-repo conventions and audit system for AI-enhanced software projects.
 

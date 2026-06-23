@@ -30,5 +30,5 @@
 - audit-all.sh exit code tracking
 - Shellcheck issues across all scripts
 
-[Unreleased]: https://github.com/B67687/standards/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/B67687/standards/releases/tag/v0.1.0
+[Unreleased]: https://github.com/B67687/Standards/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/B67687/Standards/releases/tag/v0.1.0
