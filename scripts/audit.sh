@@ -106,7 +106,7 @@ if [ -d "${CHECK_DIR}" ]; then
 fi
 
 if [ "${REPORT}" = "json" ]; then
-  REPORT_FORMAT="json"
+  _out_mode json
 fi
 
 # ── List mode ─────────────────────────────────────────────────────────────
