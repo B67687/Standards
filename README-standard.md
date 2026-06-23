@@ -67,17 +67,19 @@ AI model and harness badges go directly under the "Built with AI assistance" lin
 ```html
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/deepseek-dark.svg">
-  <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash" />
-</picture>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/opencode-harness-dark.svg">
-  <img src="docs/badges/opencode-harness.svg" alt="OpenCode harness" />
-</picture>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/badges/deepseek-dark.svg">
+    <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash" />
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/badges/opencode-harness-dark.svg">
+    <img src="docs/badges/opencode-harness.svg" alt="OpenCode harness" />
+  </picture>
+</p>
 ```
 
-This keeps the badge header clean (2-4 tech badges) while still giving AI attribution visible presence in the README.
+This keeps the badge header clean (2-4 tech badges) while still giving AI attribution visible presence in the README. The AI badge row is centered (`<p align="center">`) to match the tech badge header, creating a unified top section.
 
 ## Dark Mode
 

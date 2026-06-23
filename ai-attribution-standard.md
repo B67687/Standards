@@ -145,6 +145,8 @@ Short description (≤120 chars)
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
+<p align="center">
+
 <!-- AI model badges (how it was made) -->
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/badges/deepseek-dark.svg">
@@ -154,6 +156,8 @@ Built with AI assistance — see [CREDITS.md](./CREDITS.md).
   <source media="(prefers-color-scheme: dark)" srcset="docs/badges/opencode-harness-dark.svg">
   <img src="docs/badges/opencode-harness.svg" alt="OpenCode harness" />
 </picture>
+
+</p>
 ```
 
 ### Generator Commands
