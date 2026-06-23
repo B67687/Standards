@@ -63,7 +63,7 @@ checks_github_topics() {
   fi
 
   # ── Check 1: gh CLI installed ─────────────────────────────────────────
-  _check "gh-cli-installed" "gh CLI is installed" command -v gh
+  _check "gh-cli-installed" "gh CLI is installed" hash gh 2>/dev/null
 
   # ── Check 2: topics-count (4-8) ───────────────────────────────────────
   if [ -n "$skip_reason" ]; then

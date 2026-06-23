@@ -105,6 +105,10 @@ if [ -d "${CHECK_DIR}" ]; then
   done
 fi
 
+if [ "${REPORT}" = "json" ]; then
+  REPORT_FORMAT="json"
+fi
+
 # ── List mode ─────────────────────────────────────────────────────────────
 if ${LIST_ONLY}; then
   echo "Available standards:"

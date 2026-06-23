@@ -28,13 +28,24 @@ ALL_STANDARDS=()     # Registered by check files via: ALL_STANDARDS+=("my_standa
 CURR_STANDARD=""     # Set by check functions before calling _check
 REPO_PATH=""         # Set by audit.sh before sourcing checks
 FIX_MODE="check"     # "check" | "fix" | "force"
+REPORT_FORMAT="terminal"  # "terminal" | "json" — when json, terminal output → stderr
+
+# ── _out <args...> ──────────────────────────────────────────────────────────
+# Output to the appropriate fd: stdout for terminal, stderr for JSON mode.
+_out() {
+  if [ "${REPORT_FORMAT}" = "json" ]; then
+    echo -e "$@" >&2
+  else
+    echo -e "$@"
+  fi
+}
 
 # ── _check_header <heading> ───────────────────────────────────────────────
 # Print a section heading for a standard.
 _check_header() {
   local heading="${1:-}"
-  echo ""
-  echo -e "${BOLD}[${heading}]${NC}"
+  _out ""
+  _out "${BOLD}[${heading}]${NC}"
 }
 
 # ── _check <id> <description> <command...> ────────────────────────────────
@@ -44,11 +55,11 @@ _check() {
   local id="$1" desc="$2"
   shift 2
   if "$@"; then
-    echo -e "  ${GREEN}✓${NC} ${desc}"
+    _out "  ${GREEN}✓${NC} ${desc}"
     ALL_RESULTS+=("pass|${CURR_STANDARD}|${id}|${desc}")
     return 0
   else
-    echo -e "  ${RED}✗${NC} ${desc}"
+    _out "  ${RED}✗${NC} ${desc}"
     ALL_RESULTS+=("fail|${CURR_STANDARD}|${id}|${desc}")
     return 1
   fi
@@ -59,7 +70,7 @@ _check() {
 # a precondition wasn't met).
 _check_fail() {
   local id="$1" desc="$2"
-  echo -e "  ${RED}✗${NC} ${desc} (skipped)"
+  _out "  ${RED}✗${NC} ${desc} (skipped)"
   ALL_RESULTS+=("fail|${CURR_STANDARD}|${id}|${desc} (skipped)")
   return 1
 }
@@ -68,7 +79,7 @@ _check_fail() {
 # Record that a check requires AI judgment and is pending agent review.
 _check_pending() {
   local id="$1" desc="$2"
-  echo -e "  ${YELLOW}⟳${NC} ${desc} (pending agent review)"
+  _out "  ${YELLOW}⟳${NC} ${desc} (pending agent review)"
   ALL_RESULTS+=("pending|${CURR_STANDARD}|${id}|${desc}")
 }
 
@@ -84,7 +95,7 @@ _agent_eval_dir() {
 # Record that a fix was applied (only used during --fix / --force mode).
 _fix() {
   local id="$1" desc="$2"
-  echo -e "  ${YELLOW}→${NC} ${desc}"
+  _out "  ${YELLOW}→${NC} ${desc}"
   ALL_RESULTS+=("fix|${CURR_STANDARD}|${id}|${desc}")
 }
 
@@ -101,7 +112,7 @@ _fix_run() {
     _fix "${id}" "${desc}"
     return 0
   else
-    echo -e "  ${RED}✗${NC} Fix failed: ${desc}"
+    _out "  ${RED}✗${NC} Fix failed: ${desc}"
     ALL_RESULTS+=("error|${CURR_STANDARD}|${id}|Fix failed: ${desc}")
     return 1
   fi
@@ -112,8 +123,8 @@ _fix_run() {
 report_summary() {
   local pass=0 fail=0 pending=0 fixes=0 errors=0
   local line
-  echo ""
-  echo -e "${BOLD}── Report ──────────────────────────────────────────${NC}"
+  _out ""
+  _out "${BOLD}── Report ──────────────────────────────────────────${NC}"
   for line in "${ALL_RESULTS[@]}"; do
     case "${line}" in
       pass*)    pass=$((pass + 1)) ;;
@@ -123,9 +134,9 @@ report_summary() {
       error*)   errors=$((errors + 1)) ;;
     esac
   done
-  echo -e "  ${GREEN}${pass} passed${NC}, ${RED}${fail} failed${NC}, ${YELLOW}${pending} pending${NC}, ${YELLOW}${fixes} fixes applied${NC}, ${RED}${errors} errors${NC}"
-  echo -e "  ${BOLD}Total:${NC} $((pass + fail + pending)) checks, $((fixes + errors)) actions"
-  echo ""
+  _out "  ${GREEN}${pass} passed${NC}, ${RED}${fail} failed${NC}, ${YELLOW}${pending} pending${NC}, ${YELLOW}${fixes} fixes applied${NC}, ${RED}${errors} errors${NC}"
+  _out "  ${BOLD}Total:${NC} $((pass + fail + pending)) checks, $((fixes + errors)) actions"
+  _out ""
   return 0
 }
 

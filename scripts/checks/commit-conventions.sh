@@ -132,7 +132,7 @@ checks_commit_conventions() {
   local sig_check
   sig_check="$(cd "${repo}" && git log --format="%GG" -1 2>/dev/null || true)"
   if [ -n "${sig_check}" ]; then
-    if echo "${sig_check}" | grep -q "Signature made" 2>/dev/null; then
+    if echo "${sig_check}" | grep -qiE "(Signature made|Good.*signature)" 2>/dev/null; then
       _check "signed-commits" "At least one recent commit is signed" true
     else
       _check "signed-commits" "At least one recent commit is signed" false
