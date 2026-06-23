@@ -28,6 +28,20 @@ All badges follow shields.io format — a two-part SVG with a dark label on the 
 | License | `#d8b800` (yellow) | license: MIT |
 | AI Models | Per-model color | deepseek: `#4f46e5`, gpt: `#10a37f` |
 | Harness/Platform | `#7f52ff` (purple) | opencode, codex |
+
+## Label Convention
+
+Badges are two-part: **Label** (left, dark gray `#555`) and **Value** (right, colored). The label-value split follows this convention:
+
+| Badge Type | Label (full name) | Value (qualifier) | Example |
+|------------|------------------|-------------------|---------|
+| AI Model | Full model name as branded by provider | Max version or variant | `DeepSeek V4 Flash` / `Max` |
+| Harness | Harness name only | `harness` | `OpenCode` / `harness` |
+| Language | Language name | Version or `standard` | `Kotlin` / `2.1` |
+| License | `license` | SPDX identifier | `license` / `MIT` |
+| Metrics | Plural noun | Number | `tests` / `161` |
+
+The label MUST be the full recognizable name — not abbreviated. The value is a short qualifier. This gives readers immediate context: *what* the badge represents (label) and *which variant* (value).
 | Build/CI | `#007ec6` (blue) | actions, html |
 
 Note: `#2ea44f` is slightly darker than standard shields.io green (`#4b0`/`#44BB00`) for better WCAG AA compliance with white text. The shields.io default greens (~2.5:1 contrast) fail accessibility standards; this standard uses contrast-safe alternatives where feasible.
