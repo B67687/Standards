@@ -83,7 +83,7 @@ checks_readme_quality() {
     _check_fail "centered-title" "README title wrapped in centered div (not found)"
   else
     _check "centered-title" "README title wrapped in <div align=\"center\">" \
-      head -3 "${repo}/README.md" | grep -qE '<div\s+align="?center"?>'
+      grep -qE '<div\s+align="?center"?>' "${repo}/README.md" 2>/dev/null
   fi
 
   # ── Check 7: Section order (agent eval) ────────────────────────────────
