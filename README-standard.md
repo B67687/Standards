@@ -73,8 +73,8 @@ Built with AI assistance — see [CREDITS.md](./CREDITS.md).
     <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash" />
   </picture>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/badges/opencode-harness-dark.svg">
-    <img src="docs/badges/opencode-harness.svg" alt="OpenCode harness" />
+    <source media="(prefers-color-scheme: dark)" srcset="docs/badges/oh-my-openagent-harness-dark.svg">
+    <img src="docs/badges/oh-my-openagent-harness.svg" alt="Oh My OpenAgent" />
   </picture>
 </p>
 ```

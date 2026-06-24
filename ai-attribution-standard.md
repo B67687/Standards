@@ -47,8 +47,8 @@ Co-Authored-By: Claude Sonnet 4.5 via oh-my-openagent
 Co-Authored-By: GPT-5.4 via oh-my-openagent
   <gpt-5.4+oh-my-openagent@models.local>
 
-Co-Authored-By: DeepSeek V4 Pro via opencode
-  <deepseek-v4-pro+opencode@models.local>
+Co-Authored-By: DeepSeek V4 Pro via oh-my-openagent
+  <deepseek-v4-pro+oh-my-openagent@models.local>
 ```
 
 ### Not Just the Model — Model + Harness
@@ -99,7 +99,7 @@ Generate badges using `scripts/generate-badge.sh` per the [badge-standard.md](./
 | Component | Label (full name) | Value (reasoning level) | Color | Example |
 |-----------|-------------------|------------------------|-------|---------|
 | AI Model | Full model name | Reasoning level / tier | Per-model color (below) | `deepseek-v4-flash` / `Max` on `#4f46e5` |
-| Harness | Harness name | `harness` | `#7f52ff` (purple) | `opencode` / `harness` on `#7f52ff` |
+| Harness | Harness name | `harness` | `#7f52ff` (purple) | `oh-my-openagent` / `harness` on `#7f52ff` |
 
 The label uses the full branded model name (e.g. "DeepSeek V4 Flash") and the value is the **reasoning level** — the model's capability tier (e.g. Max, Pro, Sonnet, Flash). This keeps the badge self-documenting — readers see exactly which model and which reasoning tier.
 
@@ -155,8 +155,8 @@ Built with AI assistance — see [CREDITS.md](./CREDITS.md).
   <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash" />
 </picture>
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/opencode-harness-dark.svg">
-  <img src="docs/badges/opencode-harness.svg" alt="OpenCode harness" />
+    <source media="(prefers-color-scheme: dark)" srcset="docs/badges/oh-my-openagent-harness-dark.svg">
+    <img src="docs/badges/oh-my-openagent-harness.svg" alt="Oh My OpenAgent" />
 </picture>
 
 </p>
@@ -173,7 +173,7 @@ bash scripts/generate-badge.sh \
 
 # Harness badge — label=harness name, value=harness
 bash scripts/generate-badge.sh \
-  --label "OpenCode" \
+  --label "Oh My OpenAgent" \
   --value "harness" \
   --color "7f52ff"
 ```
@@ -193,9 +193,9 @@ For badges that may be invisible on dark backgrounds, use the `<picture>` patter
 
 | Repo | AI Badges |
 |------|-----------|
-| bus-hop | `deepseek`, `opencode` |
-| ithmb-codec | `deepseek`, `opencode` |
-| agentic-workflows | `deepseek`, `minimax-m2.5`, `minimax-m2.7`, `kimi-k2.6`, `opencode` |
+| bus-hop | `deepseek`, `oh-my-openagent` |
+| ithmb-codec | `deepseek`, `oh-my-openagent` |
+| agentic-workflows | `deepseek`, `minimax-m2.5`, `minimax-m2.7`, `kimi-k2.6`, `oh-my-openagent` |
 | traffic-dashboard | `deepseek` |
 
 ## Enforcement

@@ -96,7 +96,7 @@ GitHub doesn't support avatars for non-user accounts. For visual attribution, us
 
 ```html
 <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash">
-<img src="docs/badges/opencode.svg" alt="oh-my-openagent">
+<img src="docs/badges/oh-my-openagent-harness.svg" alt="Oh My OpenAgent">
 ```
 
 ## Deploying to a New Machine

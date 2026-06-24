@@ -27,7 +27,7 @@ All badges follow shields.io format — a two-part SVG with a dark label on the 
 | Tech/metrics | `#2ea44f` (green) | tests: 161, minSdk: 26 |
 | License | `#d8b800` (yellow) | license: MIT |
 | AI Models | Per-model color | deepseek: `#4f46e5`, gpt: `#10a37f` |
-| Harness/Platform | `#7f52ff` (purple) | opencode, codex |
+| Harness/Platform | `#7f52ff` (purple) | oh-my-openagent |
 
 ## Label Convention
 
@@ -36,7 +36,7 @@ Badges are two-part: **Label** (left, dark gray `#555`) and **Value** (right, co
 | Badge Type | Label (full name) | Value (reasoning level) | Example |
 |------------|------------------|------------------------|---------|
 | AI Model | Full model name as branded by provider | Reasoning level / tier | `DeepSeek V4 Flash` / `Max` |
-| Harness | Harness name only | `harness` | `OpenCode` / `harness` |
+| Harness | Harness name only | `harness` | `Oh My OpenAgent` / `harness` |
 | Language | Language name | Version or `standard` | `Kotlin` / `2.1` |
 | License | `license` | SPDX identifier | `license` / `MIT` |
 | Metrics | Plural noun | Number | `tests` / `161` |
@@ -50,7 +50,7 @@ Note: `#2ea44f` is slightly darker than standard shields.io green (`#4b0`/`#44BB
 
 Industry practice (VS Code, Kubernetes, Homebrew): **all major projects use text-only badges without icons.** Icons are not the standard. Our badges follow the same convention — text-only for simplicity and compatibility.
 
-Exception: If a tech logo adds clarity (e.g., Kotlin shield on an Android project), the `--icon` flag in `scripts/generate-badge.sh` supports embedding the icon as an SVG data URI. Supported icons: `kotlin`, `java`, `compose`, `github`, `opencode`.
+Exception: If a tech logo adds clarity (e.g., Kotlin shield on an Android project), the `--icon` flag in `scripts/generate-badge.sh` supports embedding the icon as an SVG data URI. Supported icons: `kotlin`, `java`, `compose`, `github`.
 
 ## Badge Density
 
@@ -105,7 +105,7 @@ Badges appear in the README header:
   <img src="docs/badges/kotlin.svg" alt="Kotlin">
   <img src="docs/badges/license.svg" alt="MIT">
   <img src="docs/badges/deepseek.svg" alt="DeepSeek V4 Flash">
-  <img src="docs/badges/opencode.svg" alt="OpenCode TUI">
+  <img src="docs/badges/oh-my-openagent-harness.svg" alt="Oh My OpenAgent">
 </p>
 ```
 
@@ -113,9 +113,9 @@ Badges appear in the README header:
 
 | Repo | Badges |
 |------|--------|
-| bus-hop | kotlin, compose, minsdk, targetsdk, license, tests, gpt5.4, deepseek, opencode |
-| ithmb-codec | deepseek, tests, license, version, commits, profiles, runtime, opencode |
-| agentic-workflows | gpt5.4, deepseek, minimax-m2.5, minimax-m2.7, kimi-k2.6, opencode |
+| bus-hop | kotlin, compose, minsdk, targetsdk, license, tests, gpt5.4, deepseek, oh-my-openagent |
+| ithmb-codec | deepseek, tests, license, version, commits, profiles, runtime, oh-my-openagent |
+| agentic-workflows | gpt5.4, deepseek, minimax-m2.5, minimax-m2.7, kimi-k2.6, oh-my-openagent |
 | traffic-dashboard | actions, deepseek, html, license |
 | 2002-Combat | gpt5.4, java, license |
 
@@ -126,7 +126,7 @@ If using shields.io URLs directly (e.g., CI badges), `&logo=` parameter accepts 
 | Tool | Slug | Available? |
 |------|------|-----------|
 | DeepSeek | `deepseek` | ✅ |
-| OpenCode | `opencode` | ✅ |
+| Oh My OpenAgent | `oh-my-openagent` | ✅ |
 | Anthropic | `anthropic` | ✅ |
 | MiniMax | `minimax` | ✅ |
 | OpenAI | (none) | ❌ — must use custom SVG |
