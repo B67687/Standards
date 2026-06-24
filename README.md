@@ -18,7 +18,7 @@
 
 Cross-repo conventions and audit system for AI-enhanced software projects.
 
-**17 standards** defining convention rules for repos. **89 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
+**18 standards** defining convention rules for repos. **95 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
@@ -101,8 +101,9 @@ standards/
 | README Quality | `README-standard.md` | 8 |
 | Repo Structure | `repo-structure-standard.md` | 6 |
 | SVG Screenshots | `svg-screenshots-standard.md` | 5 |
+| CS Project Architecture | `cs-project-architecture-standard.md` | 4 |
 
-**Total: 17 standards, 89 checks** (83 shell + 6 agent-pending)
+**Total: 18 standards, 95 checks** (86 shell + 9 agent-pending)
 
 ## CI / exit codes
 
