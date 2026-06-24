@@ -14,13 +14,13 @@
 
 | Layer | Check          | Tool                    | Required? |
 | ----- | -------------- | ----------------------- | --------- |
-| L0    | Secrets scan   | gitleaks (staged files) | ✅        |
-| L0    | Format/lint    | pre-commit hooks        | ✅        |
+| L0    | Secrets scan   | gitleaks or trivy       | ✅        |
+| L0    | Format/lint    | pre-commit or lefthook  | ✅        |
 | L0    | Commit message | commitlint              | ✅        |
 | L1    | Build          | Language toolchain      | ✅        |
 | L1    | Test           | Test runner             | ✅        |
 | L1    | SAST           | Semgrep                 | ✅        |
-| L1    | Secrets scan   | gitleaks (full history) | ✅        |
+| L1    | Secrets scan   | gitleaks or trivy       | ✅        |
 | L2    | Security       | CodeQL                  | ✅        |
 | L2    | Dependencies   | Dependency review       | ✅        |
 | L2    | Links          | Lychee                  | 🟡        |
@@ -28,33 +28,36 @@
 
 ### Application (e.g. bus-hop)
 
-| Layer | Check        | Tool               | Required? |
-| ----- | ------------ | ------------------ | --------- |
-| L0    | Secrets scan | gitleaks           | ✅        |
-| L0    | Format/lint  | pre-commit         | ✅        |
-| L1    | Build        | Gradle / toolchain | ✅        |
-| L1    | Test         | Test runner        | ✅        |
-| L1    | SAST         | Semgrep            | ✅        |
-| L1    | Secrets      | gitleaks           | ✅        |
-| L2    | Security     | CodeQL             | ✅        |
-| L2    | Dependencies | Dependency review  | ✅        |
+| Layer | Check        | Tool                      | Required? |
+| ----- | ------------ | ------------------------- | --------- |
+| L0    | Secrets scan | gitleaks or trivy         | ✅        |
+| L0    | Format/lint  | pre-commit or lefthook    | ✅        |
+| L1    | Build        | Gradle / toolchain        | ✅        |
+| L1    | Test         | Test runner               | ✅        |
+| L1    | SAST         | Semgrep                   | ✅        |
+| L1    | Secrets      | gitleaks or trivy         | ✅        |
+| L2    | Security     | CodeQL                    | ✅        |
+| L2    | Dependencies | Dependency review         | ✅        |
 
 ### Harness / Config (e.g. agentic-workflows, agent-harness)
 
-| Layer | Check        | Tool                  | Required? |
-| ----- | ------------ | --------------------- | --------- |
-| L0    | Secrets scan | gitleaks              | ✅        |
-| L0    | Shell lint   | shellcheck            | ✅        |
-| L1    | SAST         | Semgrep (shell rules) | ✅        |
-| L1    | Secrets scan | gitleaks              | ✅        |
-| L2    | Dependencies | Dependabot            | ✅        |
+| Layer | Check        | Tool                      | Required? |
+| ----- | ------------ | ------------------------- | --------- |
+| L0    | Secrets scan | gitleaks or trivy         | ✅        |
+| L0    | Shell lint   | shellcheck                | ✅        |
+| L0    | Format/lint  | lefthook (parallel hooks) | 🟡        |
+| L1    | SAST         | Semgrep (shell rules)     | ✅        |
+| L1    | Secrets scan | gitleaks or trivy         | ✅        |
+| L2    | Dependencies | Dependabot                | ✅        |
 
 ### Docs / Notes (e.g. CS-Notes)
 
-| Layer | Check         | Tool         | Required? |
-| ----- | ------------- | ------------ | --------- |
-| L1    | Links         | Lychee       | ✅        |
-| L1    | Markdown lint | markdownlint | ✅        |
+| Layer | Check         | Tool                     | Required? |
+| ----- | ------------- | ------------------------ | --------- |
+| L0    | Secrets scan  | gitleaks or trivy        | ✅        |
+| L1    | Links         | Lychee                   | ✅        |
+| L1    | Markdown lint | markdownlint             | ✅        |
+| L1    | Secrets scan  | gitleaks or trivy        | ✅        |
 
 ## Template Files
 
@@ -77,6 +80,35 @@ repos:
     hooks:
       - id: gitleaks
 ```
+
+### L0: `lefthook.yml` (Alternative to pre-commit)
+
+When using lefthook instead of pre-commit, configure it with parallel hooks for maximum speed:
+
+```yaml
+# lefthook.yml — Minimal setup
+pre-commit:
+  parallel: true
+  commands:
+    secrets:
+      run: trivy fs --scanners secrets --severity HIGH,CRITICAL .
+      skip: true  # enable by un-skipping
+    format:
+      run: pre-commit run --all-files
+      skip: true
+    commitlint:
+      run: commitlint --edit {1}
+
+commit-msg:
+  commands:
+    commitlint:
+      run: commitlint --edit {1}
+```
+
+Lefthook runs hooks in parallel by default (`parallel: true`), which is faster than pre-commit's sequential model. Use lefthook when you want:
+- Parallel hook execution
+- Simpler YAML config (no external repo references)
+- Direct shell commands instead of pre-commit hook IDs
 
 ### L0: `.commitlintrc.json`
 
@@ -172,14 +204,56 @@ jobs:
 #   ruby         → (no build step needed)
 ```
 
-## The Privacy Gap: Gitleaks
+## Secret Scanning: Gitleaks vs Trivy
 
-The most important addition across all repos is **secret scanning**. Gitleaks detects:
+The most important addition across all repos is **secret scanning**. Two tools serve this role:
 
-- API keys (AWS, GitHub, Slack, Stripe, etc.)
-- Private keys (`BEGIN RSA PRIVATE KEY`)
-- High-entropy strings that look like tokens
-- Credentials in `.env` files or config
+### Gitleaks
+
+| Aspect | Detail |
+|--------|--------|
+| Focus | Git-native secret scanning — hunts secrets in git history |
+| Detection | Regex + entropy-based, ~170 built-in rules |
+| CI | `gitleaks/gitleaks-action@v2` — detects secrets in PR diffs |
+| Pre-commit hook | Available from `https://github.com/gitleaks/gitleaks` |
+| Best for | Repos with active git history; CI integration is mature |
+
+### Trivy (`fs --scanners secrets`)
+
+| Aspect | Detail |
+|--------|--------|
+| Focus | Multi-fs scanner — filesystem (not git-specific) |
+| Detection | Regex + entropy, covers same secret patterns as gitleaks |
+| CI | `aquasecurity/trivy-action@master` with `scan-type: fs --scanners secrets` |
+| Pre-commit hook | Via lefthook (run `trivy fs --scanners secrets .` as a hook command) |
+| Best for | Repos that already use trivy for image/fs scanning — one tool, two jobs |
+
+**Recommendation:** Use gitleaks for git-focused scanning (CI on PR diffs). Use trivy as an alternative when you already have trivy in your toolchain (reduces tool count). Either tool is acceptable; both detect the same class of secrets.
+
+### Trivy CI Workflow Template
+
+```yaml
+# .github/workflows/secrets.yml — Using Trivy instead of Gitleaks
+name: Secrets
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  trivy-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Trivy secret scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: secrets
+          exit-code: 1
+```
 
 It runs at **L0** (pre-commit, staged files only — fast) and **L1** (CI, full git history — thorough). Both layers are needed because pre-commit can be bypassed with `--no-verify`, but CI cannot.
 

@@ -9,7 +9,8 @@
 #   3. .editorconfig file exists at repo root
 #   4. docs/badges/ directory exists
 #   5. docs/adr/ directory exists
-#   6. Repo type detection (informational)
+#   6. Taskfile.yml or Makefile exists at repo root (task runner)
+#   7. Repo type detection (informational)
 
 set -euo pipefail
 
@@ -44,7 +45,12 @@ checks_repo_structure() {
   _check "adr-dir-exists" "docs/adr/ directory exists" \
     test -d "${repo}/docs/adr"
 
-  # ── Check 6: Repo type detection (informational) ───────────────────────
+  # ── Check 6: Taskfile.yml or Makefile exists ──────────────────────────
+  _check "task-runner" \
+    "Taskfile.yml or Makefile exists at repo root (task runner)" \
+    test -f "${repo}/Taskfile.yml" -o -f "${repo}/Makefile"
+
+  # ── Check 7: Repo type detection (informational) ───────────────────────
   local repo_type="Config/Shell"
   local type_hint=""
   if [ -d "${repo}/src" ]; then

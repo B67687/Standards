@@ -30,6 +30,8 @@ CREDITS.md        # AI attribution
 LICENSE           # MIT for public repos
 .editorconfig     # Editor settings (indent, charset, line endings)
 .gitignore        # Whitelist (gitaccept) pattern
+mise.toml         # Tool version management (mise)
+Taskfile.yml      # Task runner (go-task) — alternative to Makefile
 ```
 
 ---
@@ -173,6 +175,8 @@ Characteristics:
 |------|-----------|-------|
 | `Dockerfile` | Capital D, at root | Docker's build system looks for capital D by default |
 | `Makefile` | Capital M, at root | `make` looks for `Makefile` before `makefile` |
+| `Taskfile.yml` | Capital T, at root | go-task runner — alternative to Makefile; supports `task --json` |
+| `mise.toml` | Lowercase, at root | Tool version management via mise (polyglot version manager) |
 | `.editorconfig` | Dotfile, at root | Required by EditorConfig spec |
 | `global.json` | At root (C#/.NET) | Pins SDK version for .NET projects |
 

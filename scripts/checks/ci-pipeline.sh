@@ -24,9 +24,14 @@ checks_ci_pipeline() {
 
   _check_header "CI Pipeline Standard"
 
-  # ── Check 1: .pre-commit-config.yaml exists ────────────────────────────
-  _check "pre-commit-config" ".pre-commit-config.yaml exists at repo root" \
-    test -f "${repo}/.pre-commit-config.yaml"
+  # ── Check 1: .pre-commit-config.yaml or lefthook.yml exists ───────────
+  local has_hook_manager=false
+  if [ -f "${repo}/.pre-commit-config.yaml" ] || [ -f "${repo}/lefthook.yml" ]; then
+    has_hook_manager=true
+  fi
+  _check "hook-manager-config" \
+    ".pre-commit-config.yaml or lefthook.yml exists at repo root" \
+    test "${has_hook_manager}" = true
 
   # ── Check 2: .github/workflows/ directory exists ───────────────────────
   _check "github-workflows-dir" ".github/workflows/ directory exists" \
@@ -50,23 +55,30 @@ checks_ci_pipeline() {
   _check "commitlint-config" ".commitlintrc.json exists at repo root" \
     test -f "${repo}/.commitlintrc.json"
 
-  # ── Check 5: Gitleaks configured ───────────────────────────────────────
-  local gitleaks_found=false
+  # ── Check 5: Secrets scanning configured (gitleaks or trivy) ───────────
+  local secrets_found=false
+  # Check in pre-commit config
   if [ -f "${repo}/.pre-commit-config.yaml" ] && \
-     grep -q 'gitleaks' "${repo}/.pre-commit-config.yaml" 2>/dev/null; then
-    gitleaks_found=true
+     grep -qi 'gitleaks' "${repo}/.pre-commit-config.yaml" 2>/dev/null; then
+    secrets_found=true
   fi
-  if [ "${gitleaks_found}" = false ] && [ -d "${repo}/.github/workflows" ]; then
+  # Check in lefthook config
+  if [ "${secrets_found}" = false ] && [ -f "${repo}/lefthook.yml" ] && \
+     grep -qiE '(gitleaks|trivy.*secret)' "${repo}/lefthook.yml" 2>/dev/null; then
+    secrets_found=true
+  fi
+  # Check in CI workflows
+  if [ "${secrets_found}" = false ] && [ -d "${repo}/.github/workflows" ]; then
     while IFS= read -r -d '' f; do
-      if grep -q 'gitleaks' "$f" 2>/dev/null; then
-        gitleaks_found=true
+      if grep -qiE '(gitleaks|trivy.*secret)' "$f" 2>/dev/null; then
+        secrets_found=true
         break
       fi
     done < <(find "${repo}/.github/workflows" -maxdepth 1 \( -name '*.yml' -o -name '*.yaml' \) -print0 2>/dev/null || true)
   fi
-  _check "gitleaks-configured" \
-    "Gitleaks referenced in .pre-commit-config.yaml or .github/workflows/" \
-    test "${gitleaks_found}" = true
+  _check "secrets-scanning-configured" \
+    "Secrets scanning (gitleaks or trivy) configured in hooks or CI" \
+    test "${secrets_found}" = true
 
   # ── Check 6: L1 build + test in workflows ──────────────────────────────
   local has_build_test=false

@@ -18,7 +18,7 @@
 
 Cross-repo conventions and audit system for AI-enhanced software projects.
 
-**18 standards** defining convention rules for repos. **95 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
+**22 standards** defining convention rules for repos. **119 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
@@ -84,26 +84,30 @@ standards/
 
 | Standard | File | Checks |
 |----------|------|-------|
-| AI Attribution | `ai-attribution-standard.md` | 6 |
 | ADR | `adr-standard.md` | 5 |
+| AI Attribution | `ai-attribution-standard.md` | 6 |
 | Auto-Commit GitOps | `auto-commit-gitops-standard.md` | 6 |
-| Badge | `badge-standard.md` | 5 |
+| Badge (shell) | `badge-standard.md` | 5 |
 | Badge Quality (agent) | `badge-standard.md` | 3 |
 | Changelog | `changelog-standard.md` | 6 |
 | CI Pipeline | `ci-pipeline-standard.md` | 6 |
-| Commit Conventions | `commit-conventions-standard.md` | 5 |
+| Commit Conventions | `commit-conventions-standard.md` | 6 |
+| CS Project Architecture | `cs-project-architecture-standard.md` | 4 |
 | Git History Cleanup | `git-history-cleanup-standard.md` | 5 |
 | GitHub Topics | `github-topics-standard.md` | 5 |
-| .gitignore | `gitignore-standard.md` | 6 |
+| .gitignore | `gitignore-standard.md` | 7 |
+| Lefthook | `auto-commit-gitops-standard.md` | 6 |
 | License | `license-standard.md` | 4 |
 | Naming Conventions | `naming-conventions-standard.md` | 5 |
 | Path Agnosticism | `path-agnosticism-standard.md` | 4 |
 | README Quality | `README-standard.md` | 8 |
-| Repo Structure | `repo-structure-standard.md` | 6 |
+| Repo Structure | `repo-structure-standard.md` | 7 |
+| Secrets Management (sops/age) | `secrets-management-standard.md` | 4 |
 | SVG Screenshots | `svg-screenshots-standard.md` | 5 |
-| CS Project Architecture | `cs-project-architecture-standard.md` | 4 |
+| Tool Versions (mise) | `tool-versions-standard.md` | 5 |
+| Trivy Secrets | `ci-pipeline-standard.md` | 5 |
 
-**Total: 18 standards, 95 checks** (86 shell + 9 agent-pending)
+**Total: 22 standards, 119 checks** (105 shell + 9 agent-pending + 5 tool-availability)
 
 ## CI / exit codes
 

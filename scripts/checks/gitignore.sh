@@ -12,6 +12,7 @@
 #   4. Contains secret/cert patterns (.env, *.pem, secrets, *.key)
 #   5. Contains build artifact patterns (build/, dist/, target/, node_modules/)
 #   6. .gitignore is tracked by git
+#   7. .env.enc is NOT in .gitignore (should be tracked for sops/age)
 
 set -euo pipefail
 
@@ -79,5 +80,12 @@ checks_gitignore() {
       bash -c "cd '${repo}' && git ls-files --error-unmatch .gitignore &>/dev/null"
   else
     _check_fail "gitignore-committed" ".gitignore not found"
+  fi
+
+  # ── Check 7: .env.enc is NOT in .gitignore (should be tracked for sops) ──
+  if [ -f "${repo}/.gitignore" ]; then
+    _check "env-enc-not-ignored" \
+      ".env.enc is NOT in .gitignore (should be tracked for sops/age encryption)" \
+      ! grep -qF '.env.enc' "${repo}/.gitignore"
   fi
 }

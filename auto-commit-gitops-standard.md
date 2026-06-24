@@ -58,6 +58,21 @@ git commit
 | `commit.gpgsign` | `true` | Auto-sign all commits |
 | `user.signingkey` | `~/.ssh/id_ed25519` | SSH key for signing |
 
+## Hook Manager: pre-commit vs Lefthook
+
+Two hook managers are supported. Choose one per repo; do NOT mix both in the same repo.
+
+| Aspect | pre-commit | Lefthook |
+|--------|-----------|----------|
+| Config file | `.pre-commit-config.yaml` | `lefthook.yml` |
+| Execution model | Sequential (hooks run in order) | Parallel by default |
+| Hook sources | External repos (git-cloned) | Local shell commands or scripts |
+| Install | `pre-commit install` | `lefthook install` |
+| Speed | Slower for many hooks | Faster with parallel hooks |
+| Best for | Established projects, multi-repo hook sharing | Speed-sensitive repos, custom scripts |
+
+**Recommendation:** Use pre-commit for repos that share hooks across multiple projects (managed centrally). Use lefthook when you want parallel execution or simpler local config. The global AI commit hooks (`~/.config/git/ai-commit-hooks/`) work with either manager — they are git hooks, not manager-specific.
+
 ## Environment Variables
 
 AI tools MUST set these environment variables to enable automatic attribution:

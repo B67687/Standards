@@ -9,6 +9,7 @@
 #   3. Has at least 2 of the standard Keep a Changelog sections
 #   4. Version headers use ISO 8601 dates (YYYY-MM-DD)
 #   5. Has version comparison links at bottom
+#   6. cliff.toml exists if git-cliff is referenced in CHANGELOG.md
 #
 # Audit-only — no fix functions.
 
@@ -71,5 +72,12 @@ checks_changelog() {
       grep -qE '^\[[0-9]+\.[0-9]+\.[0-9]+\]:' "${changelog_file}"
   else
     _check_fail "version-links" "CHANGELOG.md not found"
+  fi
+
+  # ── Check 6: cliff.toml exists if CHANGELOG references git-cliff ──────
+  if [ -f "${changelog_file}" ] && grep -qi 'cliff' "${changelog_file}" 2>/dev/null; then
+    _check "cliff-config" \
+      "cliff.toml exists at repo root (CHANGELOG.md references git-cliff)" \
+      test -f "${repo}/cliff.toml"
   fi
 }

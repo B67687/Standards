@@ -12,7 +12,7 @@
 # Secrets
 .env
 *.pem
-**/secrets*
+**/secrets*/
 *.key
 
 # Build artifacts

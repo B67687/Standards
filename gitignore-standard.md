@@ -332,6 +332,8 @@ These are redundant with the whitelist but serve as documentation and catch edge
 
 ### 4.1 Secrets & Credentials
 
+> **Exception:** Encrypted secret files (e.g. `.env.enc`, `.env.production.enc` via sops/age) are deliberately NOT ignored — they are the encrypted, commit-safe form. Track them so collaborators can decrypt with the right key. See [secrets-management-standard.md](./secrets-management-standard.md).
+
 ```gitignore
 # Secrets (never tracked — ever)
 .env

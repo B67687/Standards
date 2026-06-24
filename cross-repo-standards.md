@@ -382,11 +382,17 @@ Scripts for applying standards are in `./scripts/`.
 | Domain | Cross-Repo | Status |
 |--------|------------|--------|
 | Repository Structure | ✅ | 🟢 Done |
-| Commit Conventions | ✅ | 🟢 Done — `docs/commit-conventions-standard.md` |
+| Commit Conventions | ✅ | 🟢 Done |
 | Security Policy | ✅ | 🔴 SECURITY.md, vulnerability disclosure |
-| Naming Conventions | ✅ | 🟢 Done — `docs/naming-conventions-standard.md` |
+| Naming Conventions | ✅ | 🟢 Done |
 | Testing Standards | 🟡 | 🔴 What tests, naming, coverage (for ~10 code repos) |
 | Release Process | 🟡 | 🔴 Versioning, tagging, publishing |
 | Code Review Standards | 🟡 | 🔴 Review checklist (future use) |
-| ADR Standards | ✅ | 🟢 Done — `docs/adr-standard.md` |
+| ADR Standards | ✅ | 🟢 Done |
 | Beyond-README Docs | ✅ | 🔴 When to split into ARCHITECTURE.md, DEVELOPMENT.md |
+| Tool Versions (mise) | ✅ | 🟢 Done — `tool-versions-standard.md` |
+| Secrets Management (sops/age) | 🟡 | 🟢 Done — `secrets-management-standard.md`, check pending |
+| Lefthook (hooks) | ✅ | 🟢 Alternatives in `ci-pipeline-standard.md` + `auto-commit-gitops-standard.md` |
+| Trivy (secrets) | ✅ | 🟢 Alternatives in `ci-pipeline-standard.md` |
+| Git-Cliff (changelog) | ✅ | 🟢 Mentioned in `changelog-standard.md` |
+| Go-Task (runner) | ✅ | 🟢 Mentioned in `repo-structure-standard.md` |
