@@ -396,3 +396,4 @@ Scripts for applying standards are in `./scripts/`.
 | Trivy (secrets) | ✅ | 🟢 Alternatives in `ci-pipeline-standard.md` |
 | Git-Cliff (changelog) | ✅ | 🟢 Mentioned in `changelog-standard.md` |
 | Go-Task (runner) | ✅ | 🟢 Mentioned in `repo-structure-standard.md` |
+| Self-Consistency | ✅ | 🟢 Done — `self-consistency-standard.md` |

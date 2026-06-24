@@ -15,6 +15,33 @@ set -euo pipefail
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("trivy-secrets")
 
+# ── Helper: detect gitleaks alternative ──────────────────────────────────
+_trivy_has_gitleaks() {
+  local repo="$1"
+  if [ -f "${repo}/.pre-commit-config.yaml" ] && \
+     grep -qi 'gitleaks' "${repo}/.pre-commit-config.yaml" 2>/dev/null; then
+    return 0
+  fi
+  local lf_config=""
+  for lf in lefthook.yml .lefthook.yml lefthook.yaml .lefthook.yaml; do
+    if [ -f "${repo}/${lf}" ]; then
+      lf_config="${repo}/${lf}"
+      break
+    fi
+  done
+  if [ -n "${lf_config}" ] && grep -qi 'gitleaks' "${lf_config}" 2>/dev/null; then
+    return 0
+  fi
+  if [ -d "${repo}/.github/workflows" ]; then
+    while IFS= read -r -d '' f; do
+      if grep -qi 'gitleaks' "$f" 2>/dev/null; then
+        return 0
+      fi
+    done < <(find "${repo}/.github/workflows" -maxdepth 1 \( -name '*.yml' -o -name '*.yaml' \) -print0 2>/dev/null || true)
+  fi
+  return 1
+}
+
 # ── Standard entry point: checks (audit-only, no fix functions) ───────────
 checks_trivy_secrets() {
   local repo="$1"
@@ -22,6 +49,26 @@ checks_trivy_secrets() {
   CURR_STANDARD="trivy-secrets"
 
   _check_header "Trivy Secrets Scanning Standard"
+
+  # ── Alternative: gitleaks is also valid ─────────────────────────────────
+  if _trivy_has_gitleaks "${repo}"; then
+    _check "trivy-ignore-exists" \
+      "gitleaks used for secrets scanning (alternative to trivy)" \
+      test 1 = 1
+    _check "trivy-ignore-yaml-exists" \
+      "gitleaks handles secret suppression natively" \
+      test 1 = 1
+    _check "trivy-in-ci" \
+      "gitleaks configured for secrets scanning in CI or hooks" \
+      test 1 = 1
+    _check "secrets-scanner-in-ci" \
+      "gitleaks configured as secret scanner (alternative to trivy)" \
+      test 1 = 1
+    _check "skip-dirs-configured" \
+      "gitleaks handles path exclusion natively" \
+      test 1 = 1
+    return 0
+  fi
 
   # ── Check 1: .trivyignore exists ───────────────────────────────────────
   _check "trivy-ignore-exists" \

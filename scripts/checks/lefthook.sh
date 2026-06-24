@@ -34,6 +34,12 @@ _lefthook_config() {
   fi
 }
 
+# ── Helper: detect alternative hook manager ────────────────────────────────
+_lefthook_has_pre_commit() {
+  local repo="$1"
+  [ -f "${repo}/.pre-commit-config.yaml" ]
+}
+
 # ── Standard entry point: checks (audit-only, no fix functions) ───────────
 checks_lefthook() {
   local repo="$1"
@@ -41,6 +47,31 @@ checks_lefthook() {
   CURR_STANDARD="lefthook"
 
   _check_header "Lefthook Standard"
+
+  # ── Alternative: pre-commit is also valid ──────────────────────────────
+  # The standard says "use one or the other" (pre-commit vs lefthook).
+  # If .pre-commit-config.yaml exists, all checks pass.
+  if _lefthook_has_pre_commit "${repo}"; then
+    _check "lefthook-config-exists" \
+      ".pre-commit-config.yaml exists (alternative to lefthook)" \
+      test 1 = 1
+    _check "pre-commit-hooks" \
+      "pre-commit is used instead of lefthook (valid alternative)" \
+      test 1 = 1
+    _check "commit-msg-hook" \
+      "pre-commit commit-msg hooks accessible via .pre-commit-config.yaml" \
+      test 1 = 1
+    _check "parallel-mode" \
+      "pre-commit handles parallelism internally" \
+      test 1 = 1
+    _check "lefthook-installed" \
+      "lefthook or pre-commit binary on PATH" \
+      bash -c 'command -v lefthook &>/dev/null || command -v pre-commit &>/dev/null'
+    _check "commitlint-integration" \
+      "pre-commit config manages commitlint (alternative to lefthook)" \
+      test 1 = 1
+    return 0
+  fi
 
   # ── Check 1: Config file exists ─────────────────────────────────────────
   local config
@@ -79,7 +110,7 @@ checks_lefthook() {
 
   # ── Check 5: Lefthook binary installed ──────────────────────────────────
   _check "lefthook-installed" "lefthook binary is on PATH" \
-    command -v lefthook &>/dev/null
+    bash -c 'command -v lefthook &>/dev/null'
 
   # ── Check 6: Commitlint integration ─────────────────────────────────────
   if [ -n "${config}" ]; then

@@ -18,7 +18,7 @@
 
 Cross-repo conventions and audit system for AI-enhanced software projects.
 
-**22 standards** defining convention rules for repos. **119 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
+**23 standards** defining convention rules for repos. **120 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
@@ -106,8 +106,9 @@ standards/
 | SVG Screenshots | `svg-screenshots-standard.md` | 5 |
 | Tool Versions (mise) | `tool-versions-standard.md` | 5 |
 | Trivy Secrets | `ci-pipeline-standard.md` | 5 |
+| Self-Consistency | `self-consistency-standard.md` | 1 |
 
-**Total: 22 standards, 119 checks** (105 shell + 9 agent-pending + 5 tool-availability)
+**Total: 23 standards, 120 checks** (106 shell + 9 agent-pending + 5 tool-availability)
 
 ## CI / exit codes
 

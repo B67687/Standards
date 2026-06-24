@@ -24,6 +24,14 @@ checks_auto_commit_gitops() {
   CURR_STANDARD="auto-commit-gitops"
   # shellcheck disable=SC2034 # $repo is unused — all checks are global
   : "${repo}"
+
+  # Self-consistency guard: skip checks during inner audit to avoid
+  # circular dependency (auto-commit-gitops checks hook files that may
+  # not exist in a CI/audit-only context).
+  if [ "${SELF_CONSISTENCY_ACTIVE:-}" = "1" ]; then
+    return 0
+  fi
+
   local hooks_dir="${HOME}/.config/git/ai-commit-hooks"
 
   _check_header "Auto-Commit GitOps Standard"

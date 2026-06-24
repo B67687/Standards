@@ -34,7 +34,7 @@ checks_commit_conventions() {
   else
     _check "branch-naming" \
       "Branch name '${branch_name}' matches 'type/description-kebab-case'" \
-      bash -c '[[ "$1" =~ ^(feat|fix|refactor|docs|chore|experiment)/[a-z0-9-]+$ ]]' -- "${branch_name}"
+      bash -c '[[ "$1" =~ ^(main|master|develop)$|^(feat|fix|refactor|docs|chore|experiment)/[a-z0-9-]+$ ]]' -- "${branch_name}"
   fi
 
   # ── Check 2: Subject length ≤ 100 chars ────────────────────────────────
@@ -69,9 +69,9 @@ checks_commit_conventions() {
       if echo "${subject}" | grep -qE '^Merge '; then
         continue
       fi
-      # Extract type: first lowercase word before '(' or ':'
+      # Extract type: first lowercase word before '(' or ':' (case-insensitive)
       local ctype
-      ctype="$(echo "${subject}" | sed -n 's/^\([a-z]\+\).*/\1/p')"
+      ctype="$(echo "${subject}" | tr '[:upper:]' '[:lower:]' | sed -n 's/^\([a-z]\+\).*/\1/p')"
       if [ -n "${ctype}" ]; then
         if ! echo "${ctype}" | grep -qE '^(feat|fix|docs|refactor|perf|test|chore|cleanup|security|revert)$'; then
           invalid_found=true

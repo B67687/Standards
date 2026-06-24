@@ -1,0 +1,25 @@
+# mise.toml — Tool version management for the standards repo
+# Schema reference: https://mise.jdx.dev/configuration.html
+
+min_version = "2024.1.1"
+
+[tools]
+# Dev tools used by the standards audit system
+shellcheck = "latest"
+trivy = "latest"
+lefthook = "latest"
+"npm:bash-language-server" = "latest"
+
+# Secrets management
+sops = "latest"
+age = "latest"
+
+# Changelog generation
+git-cliff = "latest"
+
+# Task runner
+go = "1.22"
+
+[env]
+# Tools in scripts/ should be discoverable
+_.path = ["./scripts"]

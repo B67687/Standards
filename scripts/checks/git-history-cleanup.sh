@@ -48,10 +48,10 @@ checks_git_history_cleanup() {
       "No .pre-commit-config.yaml found — missing gitleaks prevention layer"
   fi
 
-  # ── Check 3: Pre-commit installed ──────────────────────────────────────
+  # ── Check 3: Pre-commit or lefthook installed ──────────────────────────
   _check "precommit-installed" \
-    "Pre-commit is installed" \
-    command -v pre-commit &>/dev/null
+    "Pre-commit or lefthook is installed" \
+    bash -c 'command -v pre-commit &>/dev/null || command -v lefthook &>/dev/null'
 
   # ── Check 4: No filter-branch references ───────────────────────────────
   # git filter-branch is deprecated; warn if it's referenced anywhere

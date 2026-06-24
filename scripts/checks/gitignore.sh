@@ -85,7 +85,7 @@ checks_gitignore() {
   # ── Check 7: .env.enc is NOT in .gitignore (should be tracked for sops) ──
   if [ -f "${repo}/.gitignore" ]; then
     local env_enc_count
-    env_enc_count="$(grep -cF '.env.enc' "${repo}/.gitignore" 2>/dev/null || true)"
+    env_enc_count="$(grep -wcF '.env.enc' "${repo}/.gitignore" 2>/dev/null || true)"
     _check "env-enc-not-ignored" \
       ".env.enc is NOT in .gitignore (should be tracked for sops/age encryption)" \
       test "${env_enc_count}" -eq 0

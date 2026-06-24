@@ -65,9 +65,9 @@ checks_sops_secrets() {
 
   # ── Check 5: sops binary on PATH (informational) ──────────────────────
   _check "sops-installed" "sops binary is on PATH (tool availability)" \
-    command -v sops &>/dev/null
+    bash -c 'command -v sops &>/dev/null'
 
   # ── Check 6: age binary on PATH (informational) ───────────────────────
   _check "age-installed" "age binary is on PATH (tool availability)" \
-    command -v age &>/dev/null
+    bash -c 'command -v age &>/dev/null'
 }

@@ -69,9 +69,10 @@ checks_tool_versions() {
 
   # ── Check 5: tracked by git ────────────────────────────────────────────
   if [ -n "${mise_basename}" ]; then
+    # Use wrapper to suppress git error messages without redirecting _check output
     _check "mise-toml-tracked" \
       "mise.toml is tracked by git" \
-      git -C "${repo}" ls-files --error-unmatch "${mise_basename}" &>/dev/null
+      bash -c 'git -C "$1" ls-files --error-unmatch "$2" >/dev/null 2>&1' _ "${repo}" "${mise_basename}"
   else
     _check_fail "mise-toml-tracked" "mise.toml not found"
   fi

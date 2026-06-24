@@ -11,6 +11,7 @@
 #
 
 ALL_STANDARDS+=("cs-project-architecture")
+set -euo pipefail
 
 checks_cs_project_architecture() {
   CURR_STANDARD="cs-project-architecture"
@@ -33,6 +34,19 @@ checks_cs_project_architecture() {
     src_root="${repo}"
   fi
 
+  # ── Early exit: no source code files → not a code project ─────────────
+  local src_files
+  src_files="$(find "${src_root}" \( -name '*.java' -o -name '*.kt' -o -name '*.py' \
+    -o -name '*.cs' -o -name '*.ts' -o -name '*.go' -o -name '*.rs' \) \
+    2>/dev/null | head -5)"
+  if [ -z "${src_files}" ]; then
+    _check "architecture-template-match" "No source code project detected — not applicable" true
+    _check "template-required-dirs" "Not applicable — no source code project" true
+    _check "no-mega-files" "Not applicable — no source code project" true
+    _check "main-entry-point" "Not applicable — no source code project" true
+    return
+  fi
+
   # ── Check 1: Architecture template identification ──────────────────────
   # Identify which of the 4 templates the project uses by directory patterns.
   # A template "matches" if 2+ of its characteristic directories exist.
@@ -40,13 +54,13 @@ checks_cs_project_architecture() {
   local identified="none"
 
   # Layered:  api/, model/, engine/, ui/
-  for d in api model engine ui; do [ -d "${src_root}/${d}" ] && ((layered_match++)); done
+  for d in api model engine ui; do [ -d "${src_root}/${d}" ] && ((layered_match++)) || true; done
   # Three-Tier:  presentation/, business/, data/
-  for d in presentation business data; do [ -d "${src_root}/${d}" ] && ((three_tier_match++)); done
+  for d in presentation business data; do [ -d "${src_root}/${d}" ] && ((three_tier_match++)) || true; done
   # MVC:  controller/, model/, view/
-  for d in controller model view; do [ -d "${src_root}/${d}" ] && ((mvc_match++)); done
+  for d in controller model view; do [ -d "${src_root}/${d}" ] && ((mvc_match++)) || true; done
   # Hexagonal:  domain/, application/, adapter/
-  for d in domain application adapter; do [ -d "${src_root}/${d}" ] && ((hex_match++)); done
+  for d in domain application adapter; do [ -d "${src_root}/${d}" ] && ((hex_match++)) || true; done
 
   # Pick the best match (highest score, or first with 2+)
   if [ "${layered_match}" -ge 2 ]; then identified="layered"
@@ -111,7 +125,7 @@ checks_cs_project_architecture() {
     local lines
     lines="$(wc -l < "${srcfile}" 2>/dev/null || echo 0)"
     if [ "${lines}" -gt 250 ]; then
-      ((mega_count++))
+      ((mega_count++)) || true
       mega_files+=" $(basename "${srcfile}")"
     fi
   done < <(find "${src_root}" -name '*.java' -o -name '*.kt' -o -name '*.py' \

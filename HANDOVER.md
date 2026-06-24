@@ -82,6 +82,63 @@ The hooks already work. `generate-badge.sh` already works. The docs are complete
 ### AI Credit Format
 Trailer format is `Co-Authored-By: Model via Harness <model+harness@models.local>`. Yes, it's a `.local` domain (RFC 6761). Don't change this.
 
+---
+
+## Addendum 2026-06-24 — New System Tools Available
+
+The homelab (Ubuntu 26.04 minipc) had 6 tools installed system-wide across a session in `agentic-workflows`. These are now available for all repos and should be wired into the enforcement system.
+
+### What Was Installed
+
+| Tool | Version | Path | What It Does |
+|------|---------|------|-------------|
+| **mise** | 2026.6.13 | `~/.local/bin/mise` | Single version manager (replaces nvm/pyenv/goenv/asdf) |
+| **sops + age** | 3.9.4 / 1.2.1 | `~/.local/bin/sops`, `~/.local/bin/age` | Git-native secrets encryption |
+| **lefthook** | 2.1.9 | `~/.local/bin/lefthook` | Parallel git hook runner |
+| **go-task** | 3.42.0 | `~/.local/bin/task` | YAML task runner (Makefile replacement) |
+| **trivy** | 0.71.2 | `~/.local/bin/trivy` | All-in-one security scanner (secrets, vulns, IaC) |
+| **git-cliff** | 2.8.0 | `~/.local/bin/git-cliff` | Conventional-commit changelog generator |
+
+All binaries in `~/.local/bin/` (already on `$PATH`). Mise auto-activates in new shells via `.bashrc`. SOPS/age key at `~/.config/sops/age/key.txt` (must be backed up).
+
+### Relevance to Standards Enforcement
+
+| Tool | Standard(s) It Touches | What to Do |
+|------|----------------------|-----------|
+| **mise** | New: `tool-versions-standard.md` | Define a standard for `.mise.toml` across repos — which tools, which versions, which plugins |
+| **sops/age** | `gitignore-standard.md` | Add `.env` (unencrypted) to gitignore pattern; define `.env.enc` convention |
+| **lefthook** | `auto-commit-gitops-standard.md`, `ci-pipeline-standard.md` | Evaluate vs. existing pre-commit hooks. Lefthook is simpler, parallel, no Python deps. Could replace `.pre-commit-config.yaml`. |
+| **go-task** | `repo-structure-standard.md` | Propose `Taskfile.yml` as the standard task runner. The `task --list` output is agent-discoverable. Existing Makefiles could be migrated. |
+| **trivy** | `ci-pipeline-standard.md` | Add a `trivy` check plugin to the audit framework (`scripts/checks/ci-pipeline.sh`). Scan for secrets leaks + vulns. |
+| **git-cliff** | `changelog-standard.md` | `git-cliff -o CHANGELOG.md` is the canonical generation command. Standardize `cliff.toml` config across repos. The current changelog check plugin should verify CLIFF-generated format. |
+
+### Integration Points with Existing Audit Framework
+
+The existing `scripts/checks/*.sh` plugin system makes it straightforward to add tool-specific checks:
+
+```bash
+# Example placeholder — scripts/checks/trivy-secrets.sh
+_check "trivy-secrets" "No secrets detected by trivy" repo
+_trivy_result=$(trivy fs --scanners secrets --quiet --exit-code 1 "$repo" 2>&1)
+_check_result $? "$_trivy_result"
+```
+
+Similarly for mise (check `.mise.toml` exists and is valid), go-task (check `Taskfile.yml` exists and parses), git-cliff (check `cliff.toml` exists and `CHANGELOG.md` matches).
+
+### What the Standards Should Define
+
+The standards should answer:
+1. **Which tools are mandatory?** (e.g., "All repos MUST have `.mise.toml`")
+2. **Which tool versions?** (the mise standard itself, specifying what mise manages)
+3. **Which hooks run?** (lefthook config template vs. pre-commit config)
+4. **Secrets pattern** (`.env` → `.env.enc` via sops/age, never commit plaintext)
+5. **Security baseline** (trivy scan on CI, thresholds for CRED/HIGH/MEDIUM)
+6. **Changelog format** (git-cliff config, conventional-commit parsing)
+
+See `agentic-workflows/dev/TOOLKIT_QUICKSTART.md` for detailed usage examples.
+
+---
+
 ## Files to Read First When Starting
 
 ```bash
