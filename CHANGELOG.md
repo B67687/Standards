@@ -23,10 +23,13 @@
 - `docs/badges/standards.svg`: Updated from 18 to 25
 - `docs/badges/checks.svg`: Updated from 95 to 131
 - `cross-repo-standards.md`: Added Self-Consistency to Future Candidates
+- `.github/workflows/ci.yml`: Added gitleaks secrets scanning step (was pre-commit only)
+- `.gitattributes`: Broadened `sopsdiffer` pattern from `.env.encrypted` to `*.encrypted`
 
 ### Fixed
 
 - `scripts/checks/commit-conventions.sh`: Aligned commit type regex with standard (10 types, removing `adopt|standardize|ci|build|style`)
+- `scripts/hooks/commit-msg`: Aligned hook type set with standard (added `security`, `cleanup`; removed `ci`, `style`, `build`)
 - `scripts/checks/cs-project-architecture.sh`: Added `set -euo pipefail` and `|| true` on `((var++))` arithmetic to prevent shell crash
 - `scripts/checks/lefthook.sh`: Fixed `&>/dev/null` redirect suppressing `_check` output — wrapped in `bash -c`
 - `scripts/checks/sops-secrets.sh`: Same redirect fix on sops and age binary checks
