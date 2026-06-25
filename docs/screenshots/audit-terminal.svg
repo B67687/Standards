@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450" role="img" aria-labelledby="audit-terminal-title audit-terminal-desc">
+  <title id="audit-terminal-title">Standards Audit Terminal</title>
+  <desc id="audit-terminal-desc">Screenshot of a terminal running ./scripts/audit.sh showing pass/fail/pending results across 25 standards</desc>
   <rect width="800" height="450" fill="#1a1a2e" rx="8"/>
   <text x="400" y="60" text-anchor="middle" fill="#e0e0e0" font-family="monospace" font-size="20">Standards Audit Terminal</text>
   <rect x="40" y="80" width="720" height="340" fill="#0d0d1a" rx="4"/>

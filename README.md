@@ -7,11 +7,13 @@
 <img alt="checks: 131" src="docs/badges/checks.svg">
 <img alt="license: MIT" src="https://img.shields.io/github/license/B67687/Standards">
 
-Cross-repo conventions and audit system for AI-enhanced software projects.
+A framework of cross-repo conventions with automated shell-based audit enforcement for AI-enhanced software projects.
 
 **25 standards** defining convention rules for repos. **131 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
+
+<img alt="Standards Audit Terminal" src="docs/screenshots/audit-terminal.svg" width="80%">
 
 </div>
 
