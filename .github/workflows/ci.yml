@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build tooling
-        run: echo "build install tools" && sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck age lefthook && curl -sLo /tmp/sops https://github.com/getsops/sops/releases/download/v3.9.4/sops-v3.9.4.linux.amd64 && chmod +x /tmp/sops && sudo mv /tmp/sops /usr/local/bin/sops && echo "build complete"
+        run: echo "build install tools" && sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck age && curl -sLo /tmp/sops https://github.com/getsops/sops/releases/download/v3.9.4/sops-v3.9.4.linux.amd64 && chmod +x /tmp/sops && sudo mv /tmp/sops /usr/local/bin/sops && echo "build complete"
 
       - name: Test — shellcheck
         run: shellcheck --severity=warning scripts/*.sh scripts/checks/*.sh && echo "test shellcheck"
