@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# gh-ensure-signed-rules — Apply signed-commit rulesets to GitHub repos.
+#
+# Canonical source: standards repo (scripts/wrappers/gh-ensure-signed-rules).
+# Enumerates repos for an owner and creates "Require verified signed commits"
+# branch protection rulesets where missing.
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF'
+Usage:
+  gh-ensure-signed-rules                Apply missing signed-commit rulesets to all active repos you own
+  gh-ensure-signed-rules OWNER          Apply missing signed-commit rulesets to all active repos owned by OWNER
+  gh-ensure-signed-rules OWNER/REPO     Apply the ruleset to one repository
+
+Notes:
+  - Requires `gh` authentication with repo admin access on the target repositories.
+  - Skips archived repositories.
+  - Leaves existing "Require verified signed commits" rulesets untouched.
+EOF
+}
+
+ruleset_payload() {
+    cat <<'JSON'
+{
+  "name": "Require verified signed commits",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["~ALL"],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "required_signatures"
+    }
+  ]
+}
+JSON
+}
+
+ensure_repo() {
+    local repo="$1"
+    local names
+
+    names="$(gh api "repos/${repo}/rulesets" --jq '.[]?.name' 2>/dev/null || true)"
+    if grep -Fxq "Require verified signed commits" <<<"$names"; then
+        printf 'skip\t%s\n' "$repo"
+        return 0
+    fi
+
+    local payload
+    payload="$(mktemp)"
+    trap 'rm -f "$payload"' RETURN
+    ruleset_payload > "$payload"
+
+    local out
+    out="$(gh api -X POST "repos/${repo}/rulesets" --input "$payload" --jq '[.id, ._links.html.href] | @tsv')"
+    printf 'create\t%s\t%s\n' "$repo" "$out"
+}
+
+collect_repos_for_owner() {
+    local owner="$1"
+    gh repo list "$owner" --limit 200 --json nameWithOwner,isArchived --jq '.[] | select(.isArchived | not) | .nameWithOwner'
+}
+
+main() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        usage
+        exit 0
+    fi
+
+    local target="${1:-}"
+    if [[ -z "$target" ]]; then
+        target="$(gh api user --jq .login)"
+    fi
+
+    if [[ "$target" == */* ]]; then
+        ensure_repo "$target"
+        exit 0
+    fi
+
+    local repo
+    while IFS= read -r repo; do
+        [[ -n "$repo" ]] || continue
+        ensure_repo "$repo"
+    done < <(collect_repos_for_owner "$target")
+}
+
+main "$@"

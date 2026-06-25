@@ -7,13 +7,21 @@
 - Self-Consistency meta-standard: standards repo must pass its own audit (`self-consistency-standard.md` + `scripts/checks/self-consistency.sh`)
 - `Makefile` at repo root with `audit`, `shellcheck`, `check` targets
 - `mise.toml` at repo root with tool version manifest
+- Git Identity Security Standard: config-driven committer enforcement, SSH signing, useConfigOnly, gpgsign (7 checks)
+- Safe Wrappers Standard: git-safe-commit/push/normalize, gh-safe-pr-create, gh-ensure-signed-rules (4 checks)
+- `scripts/hooks/` — 4 canonical git hooks (pre-commit, prepare-commit-msg, commit-msg, pre-push) replacing old hardcoded global hooks
+- `scripts/wrappers/` — 5 canonical safe wrapper scripts (config-driven, no hardcoded identity)
+- `scripts/deploy-hooks.sh` — installs hooks from repo to `~/.config/git/ai-commit-hooks/`
+- `scripts/deploy-wrappers.sh` — installs wrappers from repo to `~/.local/bin/`
 
 ### Changed
 
 - `scripts/checks/lefthook.sh`: Now passes if `.pre-commit-config.yaml` exists (alternative hook manager)
 - `scripts/checks/trivy-secrets.sh`: Now passes if gitleaks is configured in hooks or CI (alternative secret scanner)
 - `.gitignore`: Whitelisted `Makefile` and `mise.toml`
-- `README.md`: Added Self-Consistency to standards table (23 standards, 120 checks)
+- `README.md`: Updated standards table (25 standards, 131 checks)
+- `docs/badges/standards.svg`: Updated from 18 to 25
+- `docs/badges/checks.svg`: Updated from 95 to 131
 - `cross-repo-standards.md`: Added Self-Consistency to Future Candidates
 
 ### Fixed

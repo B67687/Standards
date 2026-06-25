@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# gh-safe-pr-create — Safe wrapper for gh pr create.
+#
+# Canonical source: standards repo (scripts/wrappers/gh-safe-pr-create).
+# Ensures gh CLI is available before attempting PR creation.
+
+set -euo pipefail
+if ! command -v gh &>/dev/null; then echo "gh (GitHub CLI) not found" >&2; exit 1; fi
+exec gh pr create "$@"

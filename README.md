@@ -9,7 +9,7 @@
 
 Cross-repo conventions and audit system for AI-enhanced software projects.
 
-**23 standards** defining convention rules for repos. **120 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
+**25 standards** defining convention rules for repos. **131 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 

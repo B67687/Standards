@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# git-safe-push — Safe wrapper for git push.
+#
+# Canonical source: standards repo (scripts/wrappers/git-safe-push).
+# Enforces: no --no-verify, no --force (--force-with-lease only).
+
+set -euo pipefail
+
+find_real_git() {
+  local local_bin="${HOME}/.local/bin"
+  local candidate dir
+  for candidate in /usr/bin/git /usr/local/bin/git; do
+    if [[ -x "$candidate" ]]; then
+      REAL_GIT="$candidate"
+      return 0
+    fi
+  done
+  local IFS=':'
+  for dir in ${PATH:-}; do
+    [[ -z "$dir" || "$dir" == "$local_bin" ]] && continue
+    [[ "$dir" == /mnt/* ]] && continue
+    candidate="$dir/git"
+    if [[ -x "$candidate" ]]; then
+      REAL_GIT="$candidate"
+      return 0
+    fi
+  done
+  echo "${0##*/}: git not found (install git or fix PATH)" >&2
+  exit 1
+}
+find_real_git
+
+if ! "$REAL_GIT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "git-safe-push: not inside a git work tree" >&2; exit 1
+fi
+for arg in "$@"; do
+    if [[ "$arg" == "--no-verify" ]]; then echo "git-safe-push: --no-verify is not allowed" >&2; exit 1; fi
+    if [[ "$arg" == "--force" ]]; then echo "git-safe-push: --force is not allowed (use --force-with-lease)" >&2; exit 1; fi
+done
+
+# Strip env-based identity overrides before pushing
+unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+
+git-safe-normalize >/dev/null 2>&1 || true
+exec "$REAL_GIT" push "$@"

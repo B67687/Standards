@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# git-safe-commit — Safe wrapper for git commit.
+#
+# Canonical source: standards repo (scripts/wrappers/git-safe-commit).
+# Enforces: no --no-verify, no --no-gpg-sign, identity check, signed commits.
+
+set -euo pipefail
+
+find_real_git() {
+  local local_bin="${HOME}/.local/bin"
+  local candidate dir
+  for candidate in /usr/bin/git /usr/local/bin/git; do
+    if [[ -x "$candidate" ]]; then
+      REAL_GIT="$candidate"
+      return 0
+    fi
+  done
+  local IFS=':'
+  for dir in ${PATH:-}; do
+    [[ -z "$dir" || "$dir" == "$local_bin" ]] && continue
+    [[ "$dir" == /mnt/* ]] && continue
+    candidate="$dir/git"
+    if [[ -x "$candidate" ]]; then
+      REAL_GIT="$candidate"
+      return 0
+    fi
+  done
+  echo "${0##*/}: git not found (install git or fix PATH)" >&2
+  exit 1
+}
+find_real_git
+
+# Argument guard
+contains_arg() { local needle="$1"; shift; local arg; for arg in "$@"; do [[ "$arg" == "$needle" ]] && return 0; done; return 1; }
+
+if ! "$REAL_GIT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "git-safe-commit: not inside a git work tree" >&2; exit 1
+fi
+if contains_arg "--no-verify" "$@"; then echo "git-safe-commit: --no-verify is not allowed" >&2; exit 1; fi
+if contains_arg "--no-gpg-sign" "$@"; then echo "git-safe-commit: --no-gpg-sign is not allowed" >&2; exit 1; fi
+
+# Unset env-based identity overrides (prevent AI or shell injection)
+unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+
+# Normalize repo identity first
+git-safe-normalize >/dev/null 2>&1 || true
+
+# Config-driven identity check (same model as pre-commit hook)
+allowed_name_pattern="$("$REAL_GIT" config hooks.allowed-committer-name 2>/dev/null || true)"
+allowed_email_pattern="$("$REAL_GIT" config hooks.allowed-committer-email 2>/dev/null || true)"
+
+if [ -n "$allowed_name_pattern" ] || [ -n "$allowed_email_pattern" ]; then
+  extract_name() { sed -n 's/^\([^<]*\) <[^>]*>.*$/\1/p' | sed 's/[[:space:]]*$//'; }
+  extract_email() { sed -n 's/^[^<]*<\([^>]*\)>.*$/\1/p'; }
+  committer_ident="$("$REAL_GIT" var GIT_COMMITTER_IDENT)"
+  committer_name="$(printf '%s\n' "$committer_ident" | extract_name)"
+  committer_email="$(printf '%s\n' "$committer_ident" | extract_email)"
+
+  if [ -n "$allowed_name_pattern" ]; then
+    if ! printf '%s' "$committer_name" | grep -qE "$allowed_name_pattern"; then
+      echo "git-safe-commit: committer name does not match hooks.allowed-committer-name" >&2
+      echo "  Committer: $committer_name <$committer_email>" >&2
+      echo "  Expected pattern: $allowed_name_pattern" >&2
+      exit 1
+    fi
+  fi
+  if [ -n "$allowed_email_pattern" ]; then
+    if ! printf '%s' "$committer_email" | grep -qE "$allowed_email_pattern"; then
+      echo "git-safe-commit: committer email does not match hooks.allowed-committer-email" >&2
+      echo "  Committer: $committer_name <$committer_email>" >&2
+      echo "  Expected pattern: $allowed_email_pattern" >&2
+      exit 1
+    fi
+  fi
+fi
+
+exec "$REAL_GIT" -c commit.gpgsign=true commit "$@"

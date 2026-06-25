@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# git-safe-normalize — Scrub stale local git config overrides.
+#
+# Canonical source: standards repo (scripts/wrappers/git-safe-normalize).
+# Unsets local config values that differ from global identity defaults.
+
+set -euo pipefail
+
+find_real_git() {
+  local local_bin="${HOME}/.local/bin"
+  local candidate dir
+  for candidate in /usr/bin/git /usr/local/bin/git; do
+    if [[ -x "$candidate" ]]; then
+      REAL_GIT="$candidate"
+      return 0
+    fi
+  done
+  local IFS=':'
+  for dir in ${PATH:-}; do
+    [[ -z "$dir" || "$dir" == "$local_bin" ]] && continue
+    [[ "$dir" == /mnt/* ]] && continue
+    candidate="$dir/git"
+    if [[ -x "$candidate" ]]; then
+      REAL_GIT="$candidate"
+      return 0
+    fi
+  done
+  echo "${0##*/}: git not found (install git or fix PATH)" >&2
+  exit 1
+}
+find_real_git
+
+if ! "$REAL_GIT" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "git-safe-normalize: not inside a git work tree" >&2
+    exit 1
+fi
+
+# Read expected identity from global git config
+EXPECTED_NAME="$("$REAL_GIT" config --global user.name 2>/dev/null || true)"
+EXPECTED_EMAIL="$("$REAL_GIT" config --global user.email 2>/dev/null || true)"
+
+unset_local_if_mismatch() {
+    local key="$1" expected="$2" value
+    value="$("$REAL_GIT" config --local --get "$key" 2>/dev/null || true)"
+    if [[ -n "$value" && "$value" != "$expected" ]]; then
+        "$REAL_GIT" config --local --unset-all "$key" || true
+    fi
+}
+unset_local_if_value() {
+    local key="$1" bad="$2" value
+    value="$("$REAL_GIT" config --local --get "$key" 2>/dev/null || true)"
+    if [[ "$value" == "$bad" ]]; then
+        "$REAL_GIT" config --local --unset-all "$key" || true
+    fi
+}
+
+# Only clean if global identity is set (otherwise no baseline to compare)
+if [ -n "$EXPECTED_NAME" ]; then
+  unset_local_if_mismatch "user.name" "$EXPECTED_NAME"
+fi
+if [ -n "$EXPECTED_EMAIL" ]; then
+  unset_local_if_mismatch "user.email" "$EXPECTED_EMAIL"
+fi
+unset_local_if_value "commit.gpgsign" "false"
+unset_local_if_mismatch "gpg.format" "ssh"
+
+# Report current state
+AUTHOR_IDENT="$("$REAL_GIT" var GIT_AUTHOR_IDENT)"
+COMMITTER_IDENT="$("$REAL_GIT" var GIT_COMMITTER_IDENT)"
+printf 'author=%s\n' "$AUTHOR_IDENT"
+printf 'committer=%s\n' "$COMMITTER_IDENT"
+printf 'head=%s\n' "$("$REAL_GIT" rev-parse --abbrev-ref HEAD)"
