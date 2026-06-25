@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# prepare-commit-msg — AI-Model trailer hook.
+# prepare-commit-msg — Generated-By trailer hook.
 #
 # Sourced from the canonical scripts/prepare-commit-msg.
 # This is the git hook entry point; the real logic lives in the repo script.

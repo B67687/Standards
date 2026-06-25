@@ -16,11 +16,11 @@ AI-assisted development is the norm across all projects in this org. Commits sho
    |-------|---------|----------------|
    | **Platform** | OpenCode | CREDITS.md + badges |
    | **Harness** | OhMyOpenAgent | Git committer field |
-   | **Model** | DeepSeek-V4-Flash | `AI-Model:` commit trailer |
+   | **Model** | DeepSeek-V4-Flash | `Generated-By:` commit trailer |
 
    The platform is the runtime environment — like "I wrote this in VS Code." It doesn't belong in commit metadata. The harness is the direct actor ("the tool that applied the commit"). The model is the intelligence source.
 
-4. **Model in a trailer.** The specific AI model is recorded in an `AI-Model:` trailer for machine parseability and fine-grained provenance.
+4. **Model in a trailer.** The specific AI model is recorded in an `Generated-By:` trailer for machine parseability and fine-grained provenance.
 
 5. **No fake co-authors.** `Co-Authored-By:` is reserved for human pair-programming partners. Using it for AI dilutes its meaning and has stirred community controversy.
 
@@ -64,23 +64,23 @@ Committer: Codex CLI <codex-cli@local>
 The specific AI model is recorded as a Git trailer on the last line of the commit body:
 
 ```
-AI-Model: <model-name>
+Generated-By: <model-name>
 ```
 
 ### Components
 
 | Part | Value | Example |
 |------|-------|---------|
-| AI-Model | Trailer key | `AI-Model` |
+| Generated-By | Trailer key | `Generated-By` |
 | Value | Full model name as branded by provider | `DeepSeek V4 Flash` |
 
 ### Examples
 
 ```
-AI-Model: DeepSeek V4 Flash
-AI-Model: Claude Sonnet 4.5
-AI-Model: GPT 5.4
-AI-Model: DeepSeek V4 Flash (Max)
+Generated-By: DeepSeek V4 Flash
+Generated-By: Claude Sonnet 4.5
+Generated-By: GPT 5.4
+Generated-By: DeepSeek V4 Flash (Max)
 ```
 
 The reasoning level or variant (if applicable) is included in parentheses, e.g. `DeepSeek V4 Flash (Max)`.
@@ -97,7 +97,7 @@ Committer:  OhMyOpenAgent <ohmyopenagent@local>
     Caching responses for 30s reduces API calls by ~80%
     and makes the UI feel instant on repeated lookups.
 
-    AI-Model: DeepSeek V4 Flash
+    Generated-By: DeepSeek V4 Flash
 ```
 
 In `git log`:
@@ -127,7 +127,7 @@ The committer appears differently in GitHub's UI:
 | `Co-authored-by: DeepSeek <deepseek@example.com>` | Co-Authored-By is for humans. Email could resolve to a real GitHub account. |
 | `Co-authored-by: Copilot <account@users.noreply.github.com>` | Same — co-author is for pair programming, not AI. |
 | AI model name in subject line | Clutters the log, not machine-parseable. |
-| `X-AI-Model:` prefix | `X-` headers are non-standard and may be stripped. |
+| `X-Generated-By:` prefix | `X-` headers are non-standard and may be stripped. |
 | Setting author to AI name | The human is always the author. GitHub uses author for contributor stats. |
 
 ## How to Apply
@@ -141,7 +141,7 @@ export GIT_COMMITTER_NAME="OhMyOpenAgent"
 export GIT_COMMITTER_EMAIL="ohmyopenagent@local"
 git commit -m "feat: add rate limiting" \
   -m "Implementation details..." \
-  --trailer "AI-Model: DeepSeek V4 Flash"
+  --trailer "Generated-By: DeepSeek V4 Flash"
 ```
 
 ### Via git config (per-repo)
@@ -153,7 +153,7 @@ git config committer.name "OhMyOpenAgent"
 git config committer.email "ohmyopenagent@local"
 ```
 
-Then each commit automatically uses the harness committer. The `AI-Model:` trailer still needs to be set per-commit.
+Then each commit automatically uses the harness committer. The `Generated-By:` trailer still needs to be set per-commit.
 
 ### Via prepare-commit-msg hook (automated)
 
@@ -164,7 +164,7 @@ If the harness sets `AI_HARNESS` and `AI_MODEL` environment variables, a `prepar
 ```bash
 GIT_COMMITTER_NAME="OhMyOpenAgent" \
 GIT_COMMITTER_EMAIL="ohmyopenagent@local" \
-git commit -m "Subject" -m "Body" --trailer "AI-Model: DeepSeek V4 Flash"
+git commit -m "Subject" -m "Body" --trailer "Generated-By: DeepSeek V4 Flash"
 ```
 
 ## Badge Implementation
@@ -273,7 +273,7 @@ This standard is **recommended** for all repos. Reviews should check:
 
 1. **Author field**: Is the human the author? (Must not be AI.)
 2. **Committer field**: If AI-assisted, is the committer set to the harness with a `.local` email?
-3. **AI-Model trailer**: Is the model identifier specific enough to be useful?
+3. **Generated-By trailer**: Is the model identifier specific enough to be useful?
 4. **CREDITS.md**: Does it exist and track all three layers (platform, harness, model)?
 5. **Badges**: Are AI badges present under the attribution line in README?
 6. **No Co-Authored-By for AI**: Is `Co-Authored-By:` reserved for humans only?
@@ -286,4 +286,4 @@ This standard is **recommended** for all repos. Reviews should check:
 
 ## Origin
 
-2026-06-22 — Created after the Bus-Hop repo restoration incident where `Co-authored-by: Sisyphus` with a routable email polluted the GitHub contributor graph. Revised 2026-06-25 — moved from `Co-Authored-By` trailers to committer-based attribution with harness-as-committer and `AI-Model:` trailer. See `HANDOVER.md` for the full discussion history.
+2026-06-22 — Created after the Bus-Hop repo restoration incident where `Co-authored-by: Sisyphus` with a routable email polluted the GitHub contributor graph. Revised 2026-06-25 — moved from `Co-Authored-By` trailers to committer-based attribution with harness-as-committer and `Generated-By:` trailer. See `HANDOVER.md` for the full discussion history.

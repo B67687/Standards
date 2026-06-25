@@ -46,8 +46,8 @@ if echo "$body" | grep -qE '^(Merge|Revert)\s'; then
   exit 0
 fi
 
-# Allow AI-Model trailer line (added by prepare-commit-msg hook)
-if echo "$body" | grep -qE '^AI-Model:\s'; then
+# Allow Generated-By trailer line (added by prepare-commit-msg hook)
+if echo "$body" | grep -qE '^Generated-By:\s'; then
   exit 0
 fi
 

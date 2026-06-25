@@ -69,6 +69,11 @@ Major projects use 3-6 badges. Our current repos are at or above this limit — 
 
 All static badges: `docs/badges/*.svg`
 
+**Exception:** Standard GitHub badges (license, language, etc.) SHOULD use Shields.io dynamic URLs instead of static SVGs when:
+- The badge value is publicly available via GitHub API (license, language, stars, etc.)
+- The badge auto-updates without manual intervention
+- Example: `![license](https://img.shields.io/github/license/OWNER/REPO)`
+
 ## Generator Script
 
 Use `scripts/generate-badge.sh` for any repo:

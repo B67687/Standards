@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# prepare-commit-msg --- Append AI-Model trailer for AI-assisted commits.
+# prepare-commit-msg --- Append Generated-By trailer for AI-assisted commits.
 #
 # Prerequisites (must be set by AI harness before invoking git commit):
 #   AI_COMMIT=1              — enables AI attribution
@@ -30,12 +30,12 @@ if [ -z "${GIT_COMMITTER_EMAIL:-}" ] || [ -z "${harness}" ]; then
   echo "WARNING: AI_COMMIT=1 but GIT_COMMITTER_NAME or GIT_COMMITTER_EMAIL not set — committer will not be overridden" >&2
 fi
 
-# ── Skip if AI-Model trailer already exists (--amend, rebase replay) ─────
-if grep -q "^AI-Model:" "$COMMIT_MSG_FILE" 2>/dev/null; then
+# ── Skip if Generated-By trailer already exists (--amend, rebase replay) ─────
+if grep -q "^Generated-By:" "$COMMIT_MSG_FILE" 2>/dev/null; then
   exit 0
 fi
 
-# ── Append AI-Model trailer ──────────────────────────────────────────────
+# ── Append Generated-By trailer ──────────────────────────────────────────────
 last_line="$(tail -1 "$COMMIT_MSG_FILE" 2>/dev/null || true)"
 [ -n "$last_line" ] && echo "" >> "$COMMIT_MSG_FILE"
-echo "AI-Model: ${model}" >> "$COMMIT_MSG_FILE"
+echo "Generated-By: ${model}" >> "$COMMIT_MSG_FILE"

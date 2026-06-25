@@ -3,9 +3,9 @@
 # Standards
 
 <img src="https://github.com/B67687/Standards/actions/workflows/ci.yml/badge.svg" alt="CI">
-<img alt="standards: 18" src="docs/badges/standards.svg">
-<img alt="checks: 95" src="docs/badges/checks.svg">
-<img alt="license: MIT" src="docs/badges/license-mit.svg">
+<img alt="standards: 25" src="docs/badges/standards.svg">
+<img alt="checks: 131" src="docs/badges/checks.svg">
+<img alt="license: MIT" src="https://img.shields.io/github/license/B67687/Standards">
 
 Cross-repo conventions and audit system for AI-enhanced software projects.
 

@@ -77,7 +77,7 @@ Closes #142
 
 ### AI Attribution (Committer-Based)
 
-For AI-assisted commits, see [ai-attribution-standard.md](./ai-attribution-standard.md). The AI harness becomes the **committer** with a `.local` email, and the model is recorded in an `AI-Model:` trailer:
+For AI-assisted commits, see [ai-attribution-standard.md](./ai-attribution-standard.md). The AI harness becomes the **committer** with a `.local` email, and the model is recorded in an `Generated-By:` trailer:
 
 ```
 Author:     B67687 <111849193+B67687@users.noreply.github.com>
@@ -87,7 +87,7 @@ Committer:  OhMyOpenAgent <ohmyopenagent@local>
 
     Bus arrival data is cached for 30s to reduce API calls.
     
-    AI-Model: DeepSeek V4 Flash
+    Generated-By: DeepSeek V4 Flash
 ```
 
 For human pair-programming, use the standard GitHub `Co-authored-by:` with the person's actual GitHub email. `Co-Authored-By:` is reserved for human collaboration only — never for AI attribution.
@@ -128,7 +128,7 @@ AI-generated commit messages are permitted as long as they:
 - Pass commitlint validation (same rules as human-written)
 - Are reviewed by a human before committing
 - Set the committer to the AI harness with a `.local` email per [ai-attribution-standard.md](./ai-attribution-standard.md)
-- Include an `AI-Model:` trailer identifying the model
+- Include an `Generated-By:` trailer identifying the model
 
 Recommended tools: `gh copilot suggest -t commit`, `aicommits`, or prompting an AI to format your diff as a conventional commit.
 
