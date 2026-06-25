@@ -36,8 +36,8 @@ msg="$(cat "$commit_msg_file")"
 body="$(echo "$msg" | sed '/^#/d' | sed '/^$/d' | head -1)"
 
 # Conventional commit regex: type(scope)!: description
-# Matches the standard's commit types
-if echo "$body" | grep -qE '^(feat|fix|refactor|docs|test|chore|perf|ci|revert|style|build)(\([a-zA-Z0-9._-]+\))?!?:\s'; then
+# Matches the standard's 10 commit types
+if echo "$body" | grep -qE '^(feat|fix|refactor|docs|perf|test|chore|cleanup|security|revert)(\([a-zA-Z0-9._-]+\))?!?:\s'; then
   exit 0
 fi
 
