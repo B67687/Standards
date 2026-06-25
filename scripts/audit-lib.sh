@@ -91,6 +91,41 @@ _agent_eval_dir() {
   echo "${dir}"
 }
 
+# ── _agent_eval_check <standard> <check-id> <description> ──────────────────
+# Resolve an agent eval check by looking for the result file in agent-results/.
+# If the result file exists with "status": "pass", passes the check.
+# If it exists with "status": "fail", fails the check.
+# If the result file doesn't exist, marks as pending.
+_agent_eval_check() {
+  local standard="$1" check_id="$2" desc="$3"
+  local result_dir="${REPO_PATH}/.omo/audit/agent-results"
+  local result_file="${result_dir}/${standard}-${check_id}.json"
+
+  if [ -f "${result_file}" ]; then
+    local status
+    status="$(jq -r '.status // "pending_review"' "${result_file}" 2>/dev/null || echo "pending_review")"
+    case "${status}" in
+      pass)
+        _out "  ${GREEN}✓${NC} ${desc}"
+        ALL_RESULTS+=("pass|${standard}|${check_id}|${desc}")
+        return 0
+        ;;
+      fail)
+        _out "  ${RED}✗${NC} ${desc}"
+        ALL_RESULTS+=("fail|${standard}|${check_id}|${desc}")
+        return 1
+        ;;
+      *)
+        _check_pending "${check_id}" "${desc}"
+        return 0
+        ;;
+    esac
+  else
+    _check_pending "${check_id}" "${desc}"
+    return 0
+  fi
+}
+
 # ── _fix <id> <description> ──────────────────────────────────────────────
 # Record that a fix was applied (only used during --fix / --force mode).
 _fix() {

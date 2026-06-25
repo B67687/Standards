@@ -57,7 +57,7 @@ checks_badge_quality() {
   }
 }
 AGENTJSON
-    _check_pending "color-accessibility" "Badge color accessibility (WCAG AA) (pending agent review)"
+    _agent_eval_check "${CURR_STANDARD}" "color-accessibility" "Badge color accessibility (WCAG AA)"
   else
     _check_fail "color-accessibility" "Missing docs/badges/ directory"
   fi
@@ -78,7 +78,7 @@ AGENTJSON
   }
 }
 AGENTJSON
-    _check_pending "badge-quality" "SVG badge structure and visual quality (pending agent review)"
+    _agent_eval_check "${CURR_STANDARD}" "badge-quality" "SVG badge structure and visual quality"
   else
     _check_fail "badge-quality" "Missing docs/badges/ directory"
   fi
@@ -100,7 +100,7 @@ AGENTJSON
   }
 }
 AGENTJSON
-    _check_pending "badge-ordering" "Badge priority ordering in README (pending agent review)"
+    _agent_eval_check "${CURR_STANDARD}" "badge-ordering" "Badge priority ordering in README"
   else
     _check_fail "badge-ordering" "Missing docs/badges/ directory"
   fi

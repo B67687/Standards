@@ -70,7 +70,7 @@ checks_svg_screenshots() {
   }
 }
 AGENTJSON
-  _check_pending "svg-quality" "SVG screenshot quality assessment (pending agent review)"
+  _agent_eval_check "${CURR_STANDARD}" "svg-quality" "SVG screenshot quality assessment"
 
   # ── Check 4: Dark mode via <picture> tags (agent eval) ──────────────────
   cat > "${eval_dir}/svg-screenshots-dark-mode.json" << AGENTJSON
@@ -86,7 +86,7 @@ AGENTJSON
   }
 }
 AGENTJSON
-  _check_pending "dark-mode" "Screenshot dark mode via <picture> tags (pending agent review)"
+  _agent_eval_check "${CURR_STANDARD}" "dark-mode" "Screenshot dark mode via <picture> tags"
 
   # ── Check 5: viewBox proportions (agent eval) ───────────────────────────
   cat > "${eval_dir}/svg-screenshots-viewbox-proportions.json" << AGENTJSON
@@ -103,5 +103,5 @@ AGENTJSON
   }
 }
 AGENTJSON
-  _check_pending "viewbox-proportions" "SVG viewBox proportions (pending agent review)"
+  _agent_eval_check "${CURR_STANDARD}" "viewbox-proportions" "SVG viewBox proportions"
 }

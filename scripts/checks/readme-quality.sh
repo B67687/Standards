@@ -106,7 +106,7 @@ checks_readme_quality() {
   }
 }
 AGENTJSON
-    _check_pending "section-order" "README section order follows standard (pending agent review)"
+    _agent_eval_check "${CURR_STANDARD}" "section-order" "README section order follows standard"
   fi
 
   # ── Check 8: Description quality (agent eval) ──────────────────────────
@@ -128,7 +128,7 @@ AGENTJSON
   }
 }
 AGENTJSON
-    _check_pending "description-quality" "README description is clear and ≤120 chars (pending agent review)"
+    _agent_eval_check "${CURR_STANDARD}" "description-quality" "README description is clear and ≤120 chars"
   fi
 
   # ── Check 9: Split threshold (agent eval) ──────────────────────────────
@@ -151,6 +151,6 @@ AGENTJSON
   }
 }
 AGENTJSON
-    _check_pending "split-threshold" "README complexity and split threshold (pending agent review)"
+    _agent_eval_check "${CURR_STANDARD}" "split-threshold" "README complexity and split threshold"
   fi
 }
