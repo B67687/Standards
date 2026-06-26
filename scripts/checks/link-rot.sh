@@ -19,6 +19,7 @@ ALL_STANDARDS+=("link-rot")
 # ── Standard entry point ──────────────────────────────────────────────────
 checks_link-rot() {
   local repo="$1"
+  # shellcheck disable=SC2034 # used by _check/_check_fail via audit-lib.sh
   CURR_STANDARD="link-rot"
 
   _check_header "Link Rot Standard"
