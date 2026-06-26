@@ -121,6 +121,16 @@ GitHub doesn't support avatars for non-user accounts. For visual attribution, us
 bash scripts/install-ai-commit-hooks.sh
 ```
 
+## Lefthook Integration
+
+Prefer [lefthook](https://lefthook.dev/) as the hook runner when available:
+
+1. Install: `brew install lefthook` or `npm install -g lefthook`
+2. Add `lefthook.yml` at repo root with commit-msg, pre-commit, pre-push commands
+3. Run `lefthook install` to activate hooks
+
+Lefthook is faster than pre-commit (Go binary, no Python dep) and runs hooks in parallel. For repos already using `scripts/hooks/`, the lefthook config can call those same scripts.
+
 ## Testing the Setup
 
 ```bash

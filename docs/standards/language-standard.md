@@ -25,6 +25,7 @@ All documentation, commit messages, code comments, and user-facing text **must u
 ## Enforcement
 
 - `scripts/checks/language.sh` greps markdown and text files for common British spellings
+- **[Vale.sh](https://vale.sh/)** (v3.15+, prose linter) recommended for deeper style checks — use `write-good` ruleset configured via `.vale.ini`
 - New content should follow American English; existing content is grandfathered (no retroactive conversion)
 - The check is advisory for existing files, blocking for new files in CI
 

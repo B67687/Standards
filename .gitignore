@@ -15,6 +15,10 @@
 !/.env.example
 !/.env.encrypted
 !/LICENSE
+!/cliff.toml
+!/lefthook.yml
+!/.vale.ini
+!/.lycheeignore
 
 # Secrets
 .env

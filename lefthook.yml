@@ -1,0 +1,21 @@
+# lefthook.yml — Lefthook Git hooks configuration
+# See: https://github.com/evilmartians/lefthook
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx --no -- commitlint --edit {1}
+
+pre-commit:
+  parallel: true
+  commands:
+    shellcheck:
+      glob: "*.sh"
+      run: shellcheck {staged_files}
+    audit-quick:
+      run: bash scripts/audit.sh --exit-code .
+
+pre-push:
+  commands:
+    audit-full:
+      run: bash scripts/audit.sh --exit-code .

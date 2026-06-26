@@ -3,13 +3,13 @@
 # Standards
 
 <img src="https://github.com/B67687/Standards/actions/workflows/ci.yml/badge.svg" alt="CI">
-<img alt="standards: 27" src="docs/badges/standards.svg">
-<img alt="checks: 137" src="docs/badges/checks.svg">
+<img alt="standards: 28" src="docs/badges/standards.svg">
+<img alt="checks: 141" src="docs/badges/checks.svg">
 <img alt="license: MIT" src="https://img.shields.io/github/license/B67687/Standards">
 
 A framework of cross-repo conventions with automated shell-based audit enforcement for AI-enhanced software projects.
 
-**27 standards** defining convention rules for repos. **137 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
+**28 standards** defining convention rules for repos. **141 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
@@ -88,6 +88,7 @@ standards/
 | Language | `docs/standards/language-standard.md` | 7 |
 | Lefthook | `docs/standards/auto-commit-gitops-standard.md` | 6 |
 | License | `docs/standards/license-standard.md` | 4 |
+| Link Rot | `docs/standards/link-rot-standard.md` | 4 |
 | Naming Conventions | `docs/standards/naming-conventions-standard.md` | 5 |
 | Path Agnosticism | `docs/standards/path-agnosticism-standard.md` | 4 |
 | README Quality | `docs/standards/README-standard.md` | 8 |
@@ -99,7 +100,7 @@ standards/
 | Trivy Secrets | `docs/standards/ci-pipeline-standard.md` | 5 |
 | Self-Consistency | `docs/standards/self-consistency-standard.md` | 1 |
 
-**Total: 27 standards, 137 checks**
+**Total: 28 standards, 141 checks**
 
 ## CI / exit codes
 

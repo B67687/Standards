@@ -1,0 +1,5 @@
+# Known-broken but intentional links — excluded from link rot checks
+https://localhost:*
+https://example.com
+http://127.0.0.1/*
+# https://github.com/B67687/ (can fail in CI depending on rate limits)

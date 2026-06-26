@@ -4,6 +4,7 @@
 
 ### Added
 
+- Link Rot Standard: `docs/standards/link-rot-standard.md` + `scripts/checks/link-rot.sh` (4 checks, uses lychee)
 - Language Standard (American English): `docs/standards/language-standard.md` + `scripts/checks/language.sh` with 7 sub-checks (American spelling enforcement)
 - ADR Standard: Added `**Last Reviewed:**` date field to template and `adr.sh` check 6 (6 checks total)
 - Agent Evaluation Standard: New standard documenting LLM-as-judge methodology with bias mitigation strategies (position bias, verbosity bias, self-preference, calibration drift)
@@ -38,6 +39,9 @@
 - `.gitattributes`: Broadened `sopsdiffer` pattern from `.env.encrypted` to `*.encrypted`
 - All standard documents moved from root to `docs/standards/`; research/pattern docs to `docs/research/`
 - Updated all cross-references across README, CHANGELOG, HANDOVER, and standard docs to reflect new paths
+- `.commitlintrc.json`: Added `body-max-line-length` rule for longer commit bodies
+- `language-standard.md`: Added Vale.sh recommendation for prose linting
+- `auto-commit-gitops-standard.md`: Added Lefthook integration section
 
 ### Fixed
 
