@@ -25,17 +25,19 @@ Short description (≤120 chars, no heading)
  1. Title (H1)
  2. Tech Badges (centered row — CI status, language/tech stack, license)
  3. Short Description (≤120 chars, no heading, on its own line)
- 4. AI Attribution + AI Model Badges ("Built with AI assistance" + model/harness badges)
- 5. Screenshots / Demo (apps only — near top)
- 6. Table of Contents (required if >100 lines)
- 7. Features / What It Does
- 8. Quick Start / Installation
- 9. Usage / Examples
-10. Architecture (libraries/harnesses — with SVG diagram)
-11. Contributing (required — state PR policy, where to ask questions)
-12. Optional sections (any order): Development, Testing, API, Config, Privacy, FAQ
-13. Changelog link ("See CHANGELOG.md")
-14. License (ALWAYS LAST)
+  4. AI Attribution + AI Model Badges ("Built with AI assistance" + model/harness badges)
+  5. Acknowledgements Callout (if applicable — see §Acknowledgements)
+  6. Screenshots / Demo (apps only — near top)
+  7. Table of Contents (required if >100 lines)
+  8. Features / What It Does
+  9. Quick Start / Installation
+ 10. Usage / Examples
+ 11. Architecture (libraries/harnesses — with SVG diagram)
+ 12. Contributing (required — state PR policy, where to ask questions)
+ 13. Optional sections (any order): Development, Testing, API, Config, Privacy, FAQ
+ 14. Changelog link ("See CHANGELOG.md")
+ 15. Acknowledgements Section (detailed — see §Acknowledgements)
+ 16. License (ALWAYS LAST)
 ```
 
 ## Tech Badge Header
@@ -80,6 +82,47 @@ Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 ```
 
 This keeps the badge header clean (2-4 tech badges) while still giving AI attribution visible presence in the README. The AI badge row is centered (`<p align="center">`) to match the tech badge header, creating a unified top section.
+
+## Acknowledgements
+
+Acknowledgements follow a **two-tier** system matching visibility to contribution significance:
+
+**Tier 1 — Callout (top, optional):** For individuals or orgs who specifically requested attribution, or for significant sponsors. Place immediately after the description, before any other content. Use a GitHub alert for visibility:
+
+```markdown
+> [!NOTE]
+> **Special thanks to [name](link) from [org](link)** for [specific contribution].
+```
+
+The callout tier keeps the promise of visible attribution without cluttering the badge row.
+
+**Tier 2 — Section (bottom, optional):** For all credits, contributors, inspirations, and tools. Place before License as `## Acknowledgements` (or `## Credits`). May include:
+
+- Individual contributors (name + link + contribution)
+- Orgs / sponsors (logo + link)
+- Libraries or tools the project depends on
+- Inspirations or related projects
+
+```markdown
+## Acknowledgements
+
+- [savi](https://github.com/savi) from [iopenpod](https://iopenpod.com) — [reason]
+- [Other contributor] — [reason]
+```
+
+**Rule of thumb:** If someone asks to be credited, use at minimum the Tier 1 callout. A Tier 2-only placement does not satisfy an explicit attribution request.
+
+The template for repos with acknowledgements:
+
+```md
+> [!NOTE]
+> **Special thanks to [name](link)** for [contribution].
+
+## Acknowledgements
+
+Special thanks to:
+- [name](link) — [detail]
+```
 
 ## Dark Mode
 
@@ -135,8 +178,8 @@ These files should exist at repo root alongside README.md (not inside it):
 
 ```
 Title → Tech Badges → Description → AI Attribution + AI Badges →
-Quick Start → Workflow / Features → Architecture →
-Contributing → Changelog → License
+[Callout] → Quick Start → Workflow / Features → Architecture →
+Contributing → Changelog → [Acknowledgements] → License
 ```
 
 Key features: CLI examples, workflow tree, configuration reference, ecosystem diagram.
@@ -145,16 +188,16 @@ Key features: CLI examples, workflow tree, configuration reference, ecosystem di
 
 ```
 Title → Tech Badges → Description → AI Attribution + AI Badges →
-Install → Usage → Architecture → Build → Test →
-Contributing → Changelog → License
+[Callout] → Install → Usage → Architecture → Build → Test →
+Contributing → Changelog → [Acknowledgements] → License
 ```
 
 ### Application (e.g. bus-hop)
 
 ```
 Title → Tech Badges → Description → AI Attribution + AI Badges →
-Screenshots → Features → Download → Tech Stack →
-Architecture → Contributing → License
+[Callout] → Screenshots → Features → Download → Tech Stack →
+Architecture → Contributing → [Acknowledgements] → License
 ```
 
 ## GitHub Alerts

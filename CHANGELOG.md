@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ### Added
+- README-standard.md: Two-tier acknowledgements system (callout + section)
+- README-standard.md: Position 5 for Acknowledgements Callout, position 15 for section
 
 - Link Rot Standard: `docs/standards/link-rot-standard.md` + `scripts/checks/link-rot.sh` (4 checks, uses lychee)
 - Language Standard (American English): `docs/standards/language-standard.md` + `scripts/checks/language.sh` with 7 sub-checks (American spelling enforcement)
