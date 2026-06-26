@@ -15,6 +15,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("link-rot")
+STANDARD_DOMAINS["link-rot"]="docs,infra"
 
 # ── Standard entry point ──────────────────────────────────────────────────
 checks_link-rot() {

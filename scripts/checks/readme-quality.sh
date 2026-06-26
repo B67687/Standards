@@ -18,6 +18,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("readme-quality")
+STANDARD_DOMAINS["readme-quality"]="docs,quality"
 
 # ── Helper: JSON-encode a string value using jq or manual escaping ────────
 # Falls back to sed-based escaping when jq is not available.

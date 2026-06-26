@@ -1,5 +1,10 @@
 # Agent Evaluation Standard
 
+## Domains
+
+ai,quality
+
+
 ## What
 
 Agent evaluation extends deterministic shell checks with LLM-as-judge for subjective quality assessments that cannot be automated purely through shell logic.

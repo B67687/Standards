@@ -16,6 +16,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("self-consistency")
+STANDARD_DOMAINS["self-consistency"]="quality,ai"
 
 # ── Standard entry point: checks (audit-only, no fix functions) ───────────
 checks_self_consistency() {

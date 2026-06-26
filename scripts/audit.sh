@@ -15,6 +15,7 @@
 #   --fix                Apply additive, safe auto-fixes
 #   --force              Apply all fixes including destructive
 #   --standard <id>      Only check specific standard(s)
+#   --domain <domain>     Only check standards in the given domain
 #   --report <format>    Output format: terminal (default), json, quiet
 #   --list-standards     List available standards and exit
 #   --exit-code          Exit 1 on any failure (for CI gating)
@@ -32,6 +33,7 @@ REPORT="terminal"
 EXIT_CODE=false
 LIST_ONLY=false
 FILTER_STANDARD=""
+FILTER_DOMAIN=""
 AGENT_REVIEWS=false
 
 # ── Parse arguments ───────────────────────────────────────────────────────
@@ -42,6 +44,10 @@ while [[ $# -gt 0 ]]; do
     --force) MODE="force"; shift ;;
     --standard)
       FILTER_STANDARD="$2"
+      shift 2
+      ;;
+    --domain)
+      FILTER_DOMAIN="$2"
       shift 2
       ;;
     --report)
@@ -113,7 +119,8 @@ fi
 if ${LIST_ONLY}; then
   echo "Available standards:"
   for std in "${ALL_STANDARDS[@]}"; do
-    echo "  ${std}"
+    domains="${STANDARD_DOMAINS[${std}]:-}"
+    echo "  ${std}  (${domains})"
   done
   exit 0
 fi
@@ -128,6 +135,13 @@ ANY_FAILURE=false
 for standard_id in "${ALL_STANDARDS[@]}"; do
   if [ -n "${FILTER_STANDARD}" ] && [ "${standard_id}" != "${FILTER_STANDARD}" ]; then
     continue
+  fi
+  if [ -n "${FILTER_DOMAIN}" ]; then
+    domains="${STANDARD_DOMAINS[${standard_id}]:-}"
+    case ",${domains}," in
+      *,${FILTER_DOMAIN},*) ;;  # matched
+      *) continue ;;            # not in domain
+    esac
   fi
   # Convert standard ID (kebab-case) to function name (snake_case)
   func_name="${standard_id//-/_}"

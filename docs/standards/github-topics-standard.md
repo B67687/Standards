@@ -1,5 +1,10 @@
 # GitHub Repo Topics Standard
 
+## Domains
+
+docs
+
+
 ## Why Topics Matter
 
 GitHub repo topics are the primary **discoverability** mechanism. They appear in:

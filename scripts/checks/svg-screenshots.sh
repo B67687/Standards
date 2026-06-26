@@ -14,6 +14,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("svg-screenshots")
+STANDARD_DOMAINS["svg-screenshots"]="docs"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_svg_screenshots() {

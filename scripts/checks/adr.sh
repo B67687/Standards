@@ -17,6 +17,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("adr")
+STANDARD_DOMAINS["adr"]="docs"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_adr() {

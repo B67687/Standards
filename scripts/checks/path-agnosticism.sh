@@ -3,6 +3,7 @@
 set -euo pipefail
 
 ALL_STANDARDS+=("path-agnosticism")
+STANDARD_DOMAINS["path-agnosticism"]="universal"
 
 checks_path_agnosticism() {
   local repo="${1:-${REPO_PATH}}"

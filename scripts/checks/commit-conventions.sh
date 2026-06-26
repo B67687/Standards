@@ -15,6 +15,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("commit-conventions")
+STANDARD_DOMAINS["commit-conventions"]="universal"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_commit_conventions() {

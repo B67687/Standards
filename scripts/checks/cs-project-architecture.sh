@@ -11,6 +11,7 @@
 #
 
 ALL_STANDARDS+=("cs-project-architecture")
+STANDARD_DOMAINS["cs-project-architecture"]="backend"
 set -euo pipefail
 
 checks_cs_project_architecture() {

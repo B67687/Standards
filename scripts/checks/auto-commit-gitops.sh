@@ -16,6 +16,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("auto-commit-gitops")
+STANDARD_DOMAINS["auto-commit-gitops"]="ai"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_auto_commit_gitops() {

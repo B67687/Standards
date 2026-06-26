@@ -16,6 +16,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("github-topics")
+STANDARD_DOMAINS["github-topics"]="docs"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_github_topics() {

@@ -1,5 +1,10 @@
 # Git History Cleanup Standard
 
+## Domains
+
+universal
+
+
 ## When to Use
 
 Clean history when:

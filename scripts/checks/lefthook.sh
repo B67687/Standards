@@ -17,6 +17,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("lefthook")
+STANDARD_DOMAINS["lefthook"]="infra"
 
 # ── Helper: resolve config path ────────────────────────────────────────────
 _lefthook_config() {

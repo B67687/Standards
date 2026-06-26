@@ -1,5 +1,10 @@
 # Commit Conventions Standard
 
+## Domains
+
+universal
+
+
 ## Branch Naming
 
 Branches follow the format: `type/description-in-kebab-case`

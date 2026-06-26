@@ -13,6 +13,7 @@
 set -euo pipefail
 
 ALL_STANDARDS+=("safe-wrappers")
+STANDARD_DOMAINS["safe-wrappers"]="security"
 
 checks_safe_wrappers() {
   # shellcheck disable=SC2034 # used by audit-lib.sh

@@ -25,6 +25,8 @@ fi
 ALL_RESULTS=()       # "status|standard|id|description"  status=pass|fail|pending|fix|error
 # shellcheck disable=SC2034 # populated by sourced check files
 ALL_STANDARDS=()     # Registered by check files via: ALL_STANDARDS+=("my_standard")
+# shellcheck disable=SC2034 # populated by sourced check files
+declare -A STANDARD_DOMAINS  # Registered by: STANDARD_DOMAINS["my_standard"]="universal,security"
 CURR_STANDARD=""     # Set by check functions before calling _check
 REPO_PATH=""         # Set by audit.sh before sourcing checks
 FIX_MODE="check"     # "check" | "fix" | "force"

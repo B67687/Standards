@@ -1,5 +1,10 @@
 # .gitignore Standard — Whitelist ("gitaccept") Approach
 
+## Domains
+
+universal,infra
+
+
 ## Philosophy
 The traditional `.gitignore` uses a **blacklist**: allow everything, ignore specific patterns.
 The whitelist approach ("gitaccept") inverts this: **ignore everything, accept specific patterns**.

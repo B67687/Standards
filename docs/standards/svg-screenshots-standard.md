@@ -1,5 +1,10 @@
 # SVG Screenshot Standard
 
+## Domains
+
+docs
+
+
 ## Purpose
 
 Screenshots in READMEs are currently PNG/JPEG — raster images that don't scale, look blurry on retina displays, and can't adapt to dark mode. SVG screenshots solve all three problems.

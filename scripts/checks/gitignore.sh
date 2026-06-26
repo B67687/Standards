@@ -18,6 +18,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("gitignore")
+STANDARD_DOMAINS["gitignore"]="universal,infra"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_gitignore() {

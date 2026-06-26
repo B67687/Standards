@@ -1,5 +1,10 @@
 # AI Attribution Standard
 
+## Domains
+
+ai,universal
+
+
 ## Why
 
 AI-assisted development is the norm across all projects in this org. Commits should be **transparent** about which tool and model produced them, but **never pollute** GitHub contributor stats with fake accounts or co-authors that aren't real people.

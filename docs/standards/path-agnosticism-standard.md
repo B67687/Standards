@@ -1,5 +1,10 @@
 # Path Agnosticism Standard
 
+## Domains
+
+universal
+
+
 ## Overview
 
 All scripts and configuration in this repository MUST be **path-agnostic** — they must work on any machine without modification. Absolute paths, user-specific paths, and machine-specific assumptions break portability.

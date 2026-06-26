@@ -1,5 +1,10 @@
 # Auto-Commit GitOps Standard
 
+## Domains
+
+ai
+
+
 ## Purpose
 
 Automate commit metadata so that every commit is **signed**, **attributed**, and **dated correctly** without manual effort.

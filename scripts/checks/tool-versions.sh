@@ -14,6 +14,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("tool-versions")
+STANDARD_DOMAINS["tool-versions"]="infra,backend"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_tool_versions() {

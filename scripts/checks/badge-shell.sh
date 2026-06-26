@@ -14,6 +14,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("badge-shell")
+STANDARD_DOMAINS["badge-shell"]="docs"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_badge_shell() {

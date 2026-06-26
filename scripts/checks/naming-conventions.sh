@@ -16,6 +16,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("naming-conventions")
+STANDARD_DOMAINS["naming-conventions"]="universal"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_naming_conventions() {

@@ -17,6 +17,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("sops-secrets")
+STANDARD_DOMAINS["sops-secrets"]="security"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_sops_secrets() {

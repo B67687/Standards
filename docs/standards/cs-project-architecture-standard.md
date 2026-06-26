@@ -1,5 +1,10 @@
 # CS Team Project Architecture Standard
 
+## Domains
+
+backend
+
+
 ## Context
 
 School team projects in computer science share a common problem: every group reinvents architectural decisions from scratch, wasting 2-3 weeks debating folder structure instead of writing code. This standard eliminates that waste.

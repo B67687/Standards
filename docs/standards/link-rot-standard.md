@@ -1,5 +1,10 @@
 # Link Rot Standard
 
+## Domains
+
+docs,infra
+
+
 ## Motivation
 
 Documentation links degrade over time — domains expire, pages are restructured, projects are archived. Automated link checking prevents stale references from accumulating in READMEs, documentation, and code comments.

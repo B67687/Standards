@@ -1,5 +1,10 @@
 # Tool Version Standard
 
+## Domains
+
+infra,backend
+
+
 ## Purpose
 
 Keep development tool versions consistent across machines with a version-manager config file. This ensures every contributor and CI runner uses the same toolchain.

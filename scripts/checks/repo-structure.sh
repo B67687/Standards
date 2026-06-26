@@ -16,6 +16,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("repo-structure")
+STANDARD_DOMAINS["repo-structure"]="universal"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_repo_structure() {

@@ -1,5 +1,10 @@
 # Repository Structure Standard
 
+## Domains
+
+universal
+
+
 ## Common Conventions (All Repos)
 
 All repos SHOULD have these directories at the top level:

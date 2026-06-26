@@ -1,5 +1,10 @@
 # ADR Standard
 
+## Domains
+
+docs
+
+
 ## What
 
 An Architecture Decision Record captures a significant decision: context, decision, rationale, and consequences. It preserves the "why" across time and across context resets.

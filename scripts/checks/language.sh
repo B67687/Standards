@@ -3,6 +3,7 @@
 set -euo pipefail
 
 ALL_STANDARDS+=("language")
+STANDARD_DOMAINS["language"]="docs"
 
 checks_language() {
   local repo="${1:-${REPO_PATH}}"

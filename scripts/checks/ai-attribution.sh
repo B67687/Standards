@@ -20,6 +20,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("ai-attribution")
+STANDARD_DOMAINS["ai-attribution"]="ai,universal"
 
 # ── Per-model badge colours (from docs/standards/ai-attribution-standard.md) ─────────────
 # Keys are lowercase prefix matches; longer prefixes tried first.

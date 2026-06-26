@@ -1,5 +1,10 @@
 # SVG Badge Generator Standard
 
+## Domains
+
+docs
+
+
 ## Why Local SVGs
 
 Badges from shields.io URLs depend on GitHub's camo proxy, which times out on external fetches. Static SVGs committed to `docs/badges/` render instantly, have no external dependency, and never break.

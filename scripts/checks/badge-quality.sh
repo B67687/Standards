@@ -15,6 +15,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("badge-quality")
+STANDARD_DOMAINS["badge-quality"]="docs,quality"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_badge_quality() {

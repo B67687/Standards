@@ -1,5 +1,10 @@
 # CI Pipeline Standard
 
+## Domains
+
+backend,infra
+
+
 ## Three-Stage Model
 
 | Stage                 | Where          | Trigger                  | Time   | Purpose                                                               |

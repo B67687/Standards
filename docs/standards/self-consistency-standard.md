@@ -1,5 +1,10 @@
 # Self-Consistency Standard
 
+## Domains
+
+quality,ai
+
+
 ## Purpose
 
 The standards repository must be self-consistent — it must practice what it

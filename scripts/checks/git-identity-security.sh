@@ -15,6 +15,7 @@
 set -euo pipefail
 
 ALL_STANDARDS+=("git-identity-security")
+STANDARD_DOMAINS["git-identity-security"]="security,universal"
 
 checks_git_identity_security() {
   # shellcheck disable=SC2034 # used by audit-lib.sh

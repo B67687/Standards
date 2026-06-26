@@ -1,5 +1,10 @@
 # Git Identity Security Standard
 
+## Domains
+
+security,universal
+
+
 ## Motivation
 
 AI agents can hallucinate git identities (names, emails), causing signed commits to fail, attribution to break, and security policies to be bypassed. This standard locks down git's identity and signing configuration so only authorized identities can create commits.

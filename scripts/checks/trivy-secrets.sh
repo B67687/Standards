@@ -14,6 +14,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("trivy-secrets")
+STANDARD_DOMAINS["trivy-secrets"]="security"
 
 # ── Helper: detect gitleaks alternative ──────────────────────────────────
 _trivy_has_gitleaks() {

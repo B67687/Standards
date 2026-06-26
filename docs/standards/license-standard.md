@@ -1,5 +1,10 @@
 # License Standard
 
+## Domains
+
+universal
+
+
 ## Default License: MIT
 
 All public repos should use the **MIT License** unless there's a specific reason to choose otherwise.

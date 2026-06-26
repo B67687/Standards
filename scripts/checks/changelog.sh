@@ -17,6 +17,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("changelog")
+STANDARD_DOMAINS["changelog"]="docs,universal"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_changelog() {

@@ -1,5 +1,10 @@
 # README Standard
 
+
+## Domains
+
+docs,quality
+
 ## Title Format
 
 The title is an H1 heading wrapped in a centered `<div>` tag, followed by the badge row and summary line inside the same centered block:

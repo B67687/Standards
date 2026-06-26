@@ -15,6 +15,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("license")
+STANDARD_DOMAINS["license"]="universal"
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_license() {

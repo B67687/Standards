@@ -19,6 +19,7 @@
 !/lefthook.yml
 !/.vale.ini
 !/.lycheeignore
+!/standards.json
 
 # Secrets
 .env

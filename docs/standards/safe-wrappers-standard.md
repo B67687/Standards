@@ -1,5 +1,10 @@
 # Safe Wrappers Standard
 
+## Domains
+
+security
+
+
 ## Motivation
 
 AI agents and shell automation invoke git and gh commands generically. Without guardrails, a commit with `--no-verify` can bypass hook enforcement, a `--force` push can rewrite remote history, and an unverified identity can corrupt attribution. Safe wrappers intercept these commands to enforce policy at the shell level.

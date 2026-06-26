@@ -1,5 +1,10 @@
 # Language Standard — American English
 
+## Domains
+
+docs
+
+
 ## Rule
 
 All documentation, commit messages, code comments, and user-facing text **must use American English** spelling and conventions.

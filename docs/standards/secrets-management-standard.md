@@ -1,5 +1,10 @@
 # Secrets Management Standard
 
+## Domains
+
+security
+
+
 ## Purpose
 
 Keep secrets out of git history. Encrypt `.env` files at rest, store the encrypted version in git, and decrypt only at runtime. This prevents credential leaks while keeping secrets deployable.

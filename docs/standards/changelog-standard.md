@@ -1,5 +1,10 @@
 # Changelog Standard
 
+## Domains
+
+docs,universal
+
+
 ## Format
 
 Use **[Keep a Changelog](https://keepachangelog.com/en/2.0.0/)** format with **[Semantic Versioning](https://semver.org/spec/v2.0.0.html)**.

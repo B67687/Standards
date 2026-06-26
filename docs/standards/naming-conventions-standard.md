@@ -1,5 +1,10 @@
 # Naming Conventions Standard
 
+## Domains
+
+universal
+
+
 ## Repositories
 
 - kebab-case: `agentic-workflows`, `ithmb-codec`, `bus-hop`, `cs-notes`
