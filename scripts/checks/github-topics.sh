@@ -16,6 +16,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("github-topics")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["github-topics"]="docs"
 
 # ── Standard entry point: checks ──────────────────────────────────────────

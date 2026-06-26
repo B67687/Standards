@@ -20,6 +20,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("ai-attribution")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["ai-attribution"]="ai,universal"
 
 # ── Per-model badge colours (from docs/standards/ai-attribution-standard.md) ─────────────

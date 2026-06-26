@@ -24,7 +24,6 @@ done
 
 # ── Source framework — same as audit.sh does ───────────────────────────────
 source "${SCRIPT_DIR}/audit-lib.sh"
-REPO_PATH="${SCRIPT_DIR}/.."  # needed by some checks, not actually used
 
 CHECK_DIR="${SCRIPT_DIR}/checks"
 if [ -d "${CHECK_DIR}" ]; then

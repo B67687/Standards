@@ -15,6 +15,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("ci-pipeline")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["ci-pipeline"]="backend,infra"
 
 # ── Standard entry point: checks (audit-only, no fix functions) ───────────

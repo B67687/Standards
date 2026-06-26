@@ -18,6 +18,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("readme-quality")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["readme-quality"]="docs,quality"
 
 # ── Helper: JSON-encode a string value using jq or manual escaping ────────

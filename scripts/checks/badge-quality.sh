@@ -15,6 +15,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("badge-quality")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["badge-quality"]="docs,quality"
 
 # ── Standard entry point: checks ──────────────────────────────────────────

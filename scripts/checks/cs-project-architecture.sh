@@ -11,6 +11,7 @@
 #
 
 ALL_STANDARDS+=("cs-project-architecture")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["cs-project-architecture"]="backend"
 set -euo pipefail
 

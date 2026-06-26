@@ -16,6 +16,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("self-consistency")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["self-consistency"]="quality,ai"
 
 # ── Standard entry point: checks (audit-only, no fix functions) ───────────

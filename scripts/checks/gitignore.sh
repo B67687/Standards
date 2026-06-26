@@ -18,6 +18,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("gitignore")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["gitignore"]="universal,infra"
 
 # ── Standard entry point: checks ──────────────────────────────────────────

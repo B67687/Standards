@@ -3,6 +3,7 @@
 set -euo pipefail
 
 ALL_STANDARDS+=("path-agnosticism")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["path-agnosticism"]="universal"
 
 checks_path_agnosticism() {

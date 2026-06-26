@@ -3,6 +3,7 @@
 set -euo pipefail
 
 ALL_STANDARDS+=("language")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["language"]="docs"
 
 checks_language() {

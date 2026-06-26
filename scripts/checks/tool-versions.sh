@@ -14,6 +14,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("tool-versions")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["tool-versions"]="infra,backend"
 
 # ── Standard entry point: checks ──────────────────────────────────────────

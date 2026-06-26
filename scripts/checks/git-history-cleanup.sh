@@ -11,6 +11,7 @@
 set -euo pipefail
 
 ALL_STANDARDS+=("git-history-cleanup")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["git-history-cleanup"]="universal"
 
 checks_git_history_cleanup() {

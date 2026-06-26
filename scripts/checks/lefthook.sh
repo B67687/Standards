@@ -17,6 +17,7 @@ set -euo pipefail
 
 # ── Register this standard ────────────────────────────────────────────────
 ALL_STANDARDS+=("lefthook")
+# shellcheck disable=SC2034 # consumed by audit-lib.sh via source
 STANDARD_DOMAINS["lefthook"]="infra"
 
 # ── Helper: resolve config path ────────────────────────────────────────────
