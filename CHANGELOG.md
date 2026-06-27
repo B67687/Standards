@@ -9,6 +9,15 @@
 - scripts/generate-standards-json.sh: Generates JSON from STANDARD_DOMAINS + check scripts
 - audit-lib.sh: `declare -A STANDARD_DOMAINS` associative array
 - audit.sh: `--domain` flag for filtering standards by domain
+- docs/standards/code-documentation-standard.md: Docstrings per language, enforcement via CI
+- docs/standards/overview-documentation-standard.md: Elevator pitch, problem statement, key concepts
+- docs/standards/architecture-documentation-standard.md: C4 diagrams, component docs, tech stack
+- scripts/checks/code-documentation.sh: 3 checks (doc exists, source docstrings, tools ref'd)
+- scripts/checks/overview-documentation.sh: 4 checks (doc exists, pitch, visual, section)
+- scripts/checks/architecture-documentation.sh: 4 checks (doc exists, arch.md, diagram, tech stack)
+
+### Fixed
+- link-rot.sh: Function name used hyphens instead of underscores — 4 checks were silently skipped
 
 - Link Rot Standard: `docs/standards/link-rot-standard.md` + `scripts/checks/link-rot.sh` (4 checks, uses lychee)
 - Language Standard (American English): `docs/standards/language-standard.md` + `scripts/checks/language.sh` with 7 sub-checks (American spelling enforcement)

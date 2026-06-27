@@ -3,13 +3,13 @@
 # Standards
 
 <img src="https://github.com/B67687/Standards/actions/workflows/ci.yml/badge.svg" alt="CI">
-<img alt="standards: 28" src="docs/badges/standards.svg">
-<img alt="checks: 141" src="docs/badges/checks.svg">
+<img alt="standards: 31" src="docs/badges/standards.svg">
+  <img alt="checks: 152" src="docs/badges/checks.svg">
 <img alt="license: MIT" src="https://img.shields.io/github/license/B67687/Standards">
 
 A framework of cross-repo conventions with automated shell-based audit enforcement for AI-enhanced software projects.
 
-**28 standards** defining convention rules for repos. **141 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
+**31 standards** defining convention rules for repos. **152 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
@@ -74,11 +74,13 @@ standards/
 | ADR | `docs/standards/adr-standard.md` | 6 |
 | Agent Evaluation | `docs/standards/agent-evaluation-standard.md` | 0 |
 | AI Attribution | `docs/standards/ai-attribution-standard.md` | 6 |
+| Architecture Documentation | `docs/standards/architecture-documentation-standard.md` | 4 |
 | Auto-Commit GitOps | `docs/standards/auto-commit-gitops-standard.md` | 6 |
 | Badge (shell) | `docs/standards/badge-standard.md` | 5 |
 | Badge Quality (agent) | `docs/standards/badge-standard.md` | 3 |
 | Changelog | `docs/standards/changelog-standard.md` | 6 |
 | CI Pipeline | `docs/standards/ci-pipeline-standard.md` | 6 |
+| Code Documentation | `docs/standards/code-documentation-standard.md` | 3 |
 | Commit Conventions | `docs/standards/commit-conventions-standard.md` | 6 |
 | CS Project Architecture | `docs/standards/cs-project-architecture-standard.md` | 4 |
 | Git History Cleanup | `docs/standards/git-history-cleanup-standard.md` | 5 |
@@ -90,6 +92,7 @@ standards/
 | License | `docs/standards/license-standard.md` | 4 |
 | Link Rot | `docs/standards/link-rot-standard.md` | 4 |
 | Naming Conventions | `docs/standards/naming-conventions-standard.md` | 5 |
+| Overview Documentation | `docs/standards/overview-documentation-standard.md` | 4 |
 | Path Agnosticism | `docs/standards/path-agnosticism-standard.md` | 4 |
 | README Quality | `docs/standards/README-standard.md` | 8 |
 | Repo Structure | `docs/standards/repo-structure-standard.md` | 7 |
@@ -100,7 +103,7 @@ standards/
 | Trivy Secrets | `docs/standards/ci-pipeline-standard.md` | 5 |
 | Self-Consistency | `docs/standards/self-consistency-standard.md` | 1 |
 
-**Total: 28 standards, 141 checks**
+**Total: 31 standards, 152 checks**
 
 ## CI / exit codes
 

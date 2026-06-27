@@ -19,7 +19,7 @@ ALL_STANDARDS+=("link-rot")
 STANDARD_DOMAINS["link-rot"]="docs,infra"
 
 # ── Standard entry point ──────────────────────────────────────────────────
-checks_link-rot() {
+checks_link_rot() {
   local repo="$1"
   # shellcheck disable=SC2034 # used by _check/_check_fail via audit-lib.sh
   CURR_STANDARD="link-rot"
