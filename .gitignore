@@ -10,10 +10,7 @@
 !/Makefile
 !/mise.toml
 !/HANDOVER.md
-!/.sops.yaml
 !/.gitattributes
-!/.env.example
-!/.env.encrypted
 
 # Secrets
 .env
