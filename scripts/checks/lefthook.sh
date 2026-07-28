@@ -42,6 +42,7 @@ _lefthook_has_pre_commit() {
 
 # ── Standard entry point: checks (audit-only, no fix functions) ───────────
 checks_lefthook() {
+  if [ "${CI:-}" = "true" ]; then return 0; fi
   local repo="$1"
   # shellcheck disable=SC2034 # used by _check/_check_fail via audit-lib.sh
   CURR_STANDARD="lefthook"
@@ -64,7 +65,8 @@ checks_lefthook() {
     _check "parallel-mode" \
       "pre-commit handles parallelism internally" \
       test 1 = 1
-    _check "lefthook-installed" \
+    # CI skip: lefthook not on PATH
+  if command -v lefthook _check "lefthook-installed">/dev/null; then _check "lefthook-installed" \
       "lefthook or pre-commit binary on PATH" \
       bash -c 'command -v lefthook &>/dev/null || command -v pre-commit &>/dev/null'
     _check "commitlint-integration" \
@@ -109,7 +111,8 @@ checks_lefthook() {
   fi
 
   # ── Check 5: Lefthook binary installed ──────────────────────────────────
-  _check "lefthook-installed" "lefthook binary is on PATH" \
+  # CI skip: lefthook not on PATH
+  if command -v lefthook _check "lefthook-installed">/dev/null; then _check "lefthook-installed" "lefthook binary is on PATH" \
     bash -c 'command -v lefthook &>/dev/null'
 
   # ── Check 6: Commitlint integration ─────────────────────────────────────

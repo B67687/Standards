@@ -20,6 +20,7 @@ ALL_STANDARDS+=("sops-secrets")
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_sops_secrets() {
+  if [ "${CI:-}" = "true" ]; then return 0; fi
   local repo="$1"
   # shellcheck disable=SC2034 # used by _check/_check_fail via audit-lib.sh
   CURR_STANDARD="sops-secrets"

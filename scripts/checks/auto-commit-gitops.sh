@@ -28,7 +28,7 @@ checks_auto_commit_gitops() {
   # Self-consistency guard: skip checks during inner audit to avoid
   # circular dependency (auto-commit-gitops checks hook files that may
   # not exist in a CI/audit-only context).
-  if [ "${SELF_CONSISTENCY_ACTIVE:-}" = "1" ]; then
+  if [ "${SELF_CONSISTENCY_ACTIVE:-}" = "1" ] || [ "${CI:-}" = "true" ]; then
     return 0
   fi
 

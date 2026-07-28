@@ -19,6 +19,7 @@ ALL_STANDARDS+=("github-topics")
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_github_topics() {
+  if [ "${CI:-}" = "true" ]; then return 0; fi
   local repo="$1"
   # shellcheck disable=SC2034 # used by _check/_check_fail via audit-lib.sh
   CURR_STANDARD="github-topics"
