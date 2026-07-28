@@ -127,17 +127,17 @@ checks_commit_conventions() {
       true
   fi
 
-  # ── Check 6: Signed commits ────────────────────────────────────────────
-  # At least one recent commit should be GPG/SSH signed.
-  local sig_check
-  sig_check="$(cd "${repo}" && git log --format="%GG" -1 2>/dev/null || true)"
-  if [ -n "${sig_check}" ]; then
-    if echo "${sig_check}" | grep -qiE "(Signature made|Good.*signature)" 2>/dev/null; then
-      _check "signed-commits" "At least one recent commit is signed" true
+  # ── Check 6: Signed commits (skipped in CI — GPG keys not available) ────
+  if [ "${CI:-}" != "true" ]; then
+    local sig_check
+    sig_check="$(cd "${repo}" && git log --format="%GG" -1 2>/dev/null || true)"
+    if [ -n "${sig_check}" ]; then
+      if echo "${sig_check}" | grep -qiE "(Signature made|Good.*signature)" 2>/dev/null; then
+        _check "signed-commits" "At least one recent commit is signed" true
+      else
+        _check "signed-commits" "At least one recent commit is signed" false
+      fi
     else
       _check "signed-commits" "At least one recent commit is signed" false
     fi
-  else
-    _check "signed-commits" "At least one recent commit is signed" false
   fi
-}
