@@ -139,5 +139,6 @@ checks_commit_conventions() {
       fi
     else
       _check "signed-commits" "At least one recent commit is signed" false
+    fi
   fi
-  }
+}
