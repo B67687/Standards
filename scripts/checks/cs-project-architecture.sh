@@ -14,7 +14,8 @@ ALL_STANDARDS+=("cs-project-architecture")
 set -euo pipefail
 
 # Early skip: only run on CS project repos (those with src/, app/, or go.mod)
-if [ ! -d "${repo}/src" ] && [ ! -d "${repo}/app" ] && [ ! -f "${repo}/go.mod" ] && [ ! -f "${repo}/pom.xml" ] && [ ! -f "${repo}/Cargo.toml" ]; then
+# Early skip: only run on CS project repos
+if [ ! -d "${repo:-}/src" ] && [ ! -d "${repo:-}/app" ] && [ ! -f "${repo:-}/go.mod" ] && [ ! -f "${repo:-}/pom.xml" ] && [ ! -f "${repo:-}/Cargo.toml" ]; then
   return 0 2>/dev/null || exit 0
 fi
 
