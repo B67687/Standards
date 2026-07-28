@@ -11,7 +11,6 @@
 #
 
 ALL_STANDARDS+=("cs-project-architecture")
-set -euo pipefail
 
 checks_cs_project_architecture() {
   # Early skip: only run on CS project repos
