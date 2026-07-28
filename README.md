@@ -2,35 +2,61 @@
 
 # Standards
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/standards.svg">
+  <img alt="standards-17" src="docs/badges/standards.svg">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/checks.svg">
+  <img alt="checks-89" src="docs/badges/checks.svg">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/badges/license-mit.svg">
+  <img alt="license-MIT" src="docs/badges/license-mit.svg">
+</picture>
 <img src="https://github.com/B67687/Standards/actions/workflows/ci.yml/badge.svg" alt="CI">
-<img alt="standards: 31" src="docs/badges/standards.svg">
-  <img alt="checks: 152" src="docs/badges/checks.svg">
-<img alt="license: MIT" src="https://img.shields.io/github/license/B67687/Standards">
 
-A framework of cross-repo conventions with automated shell-based audit enforcement for AI-enhanced software projects.
+Cross-repo conventions and audit system for AI-enhanced software projects.
 
-**31 standards** defining convention rules for repos. **152 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
+**23 standards** defining convention rules for repos. **120 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
-
-<img alt="Standards Audit Terminal" src="docs/screenshots/audit-terminal.svg" width="80%">
 
 </div>
 
 <p align="center">
-  <img alt="model: DeepSeek V4 Flash (Max)" src="docs/badges/deepseek-v4.svg">
-  <img alt="harness: Oh My OpenAgent" src="docs/badges/oh-my-openagent-harness.svg">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/badges/deepseek-v4.svg">
+    <img alt="model: DeepSeek V4 Flash (Max)" src="docs/badges/deepseek-v4.svg">
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/badges/oh-my-openagent-harness.svg">
+    <img alt="harness: Oh My OpenAgent" src="docs/badges/oh-my-openagent-harness.svg">
+  </picture>
 </p>
 
-## About
+## Architecture
 
-A framework of cross-repo conventions with automated shell-based audit enforcement for AI-enhanced software projects. Runs anywhere — no language runtime required beyond bash.
+```
+standards/
+├── *.md                    # Standard definitions (what + why)
+├── scripts/
+│   ├── audit.sh            # CLI entry point — audit a single repo
+│   ├── audit-lib.sh        # Shared framework: _check, reporter, JSON output
+│   ├── audit-all.sh        # Batch audit across multiple repos
+│   ├── agent-check.sh      # Dispatches agent-eval requests for subjective checks
+│   ├── checks/*.sh         # One file per standard — plugins auto-discovered
+│   └── ...                 # Utility scripts (badge generator, hooks, etc.)
+└── .omo/dashboard/         # Generated audit results + HTML dashboard
+```
 
-Part of a trio of meta-projects:
+### How it works
 
-- Standards (this) — what good means, enforced by automated audits
-- Development Protocol (github.com/B67687/Development-Protocol) — process from intent to product
-- Lessons — cross-project knowledge base, loaded every session
+1. **Standard documents** (`*-standard.md`) define each convention's rules, rationale, and success criteria.
+2. **Check scripts** (`scripts/checks/*.sh`) implement deterministic tests for each rule — file existence, grep patterns, format validation via shell.
+3. **Agent evals** extend shell checks for subjective judgments (README quality, badge accessibility, SVG correctness). Checks write structured JSON prompts; `agent-check.sh` collects them.
+4. **Audit runner** (`audit.sh`) discovers all check plugins, executes them against a repo, and produces terminal + JSON reports.
+5. **Dashboard** (`audit-all.sh` + `dashboard.sh`) runs batch audits across repos, aggregates into a compliance matrix, and generates a self-contained HTML dashboard.
 
 ## Quick start
 
@@ -54,66 +80,35 @@ Part of a trio of meta-projects:
 ./scripts/dashboard.sh
 ```
 
-## Architecture
-
-```
-standards/
-├── *.md                    # Standard definitions (what + why)
-├── scripts/
-│   ├── audit.sh            # CLI entry point — audit a single repo
-│   ├── audit-lib.sh        # Shared framework: _check, reporter, JSON output
-│   ├── audit-all.sh        # Batch audit across multiple repos
-│   ├── agent-check.sh      # Dispatches agent-eval requests for subjective checks
-│   ├── checks/*.sh         # One file per standard — plugins auto-discovered
-│   └── ...                 # Utility scripts (badge generator, hooks, etc.)
-└── .omo/dashboard/         # Generated audit results + HTML dashboard
-```
-
-### How it works
-
-1. **Standard documents** (`docs/standards/*-standard.md`) define each convention's rules, rationale, and success criteria.
-2. **Check scripts** (`scripts/checks/*.sh`) implement deterministic tests for each rule — file existence, grep patterns, format validation via shell.
-3. **Agent evals** extend shell checks for subjective judgments (README quality, badge accessibility, SVG correctness). Checks write structured JSON prompts; `agent-check.sh` collects them.
-4. **Audit runner** (`audit.sh`) discovers all check plugins, executes them against a repo, and produces terminal + JSON reports.
-5. **Dashboard** (`audit-all.sh` + `dashboard.sh`) runs batch audits across repos, aggregates into a compliance matrix, and generates a self-contained HTML dashboard.
-
 ## Standards
 
-| Standard                      | File                                                    | Checks |
-| ----------------------------- | ------------------------------------------------------- | ------ |
-| ADR                           | `docs/standards/adr-standard.md`                        | 6      |
-| Agent Evaluation              | `docs/standards/agent-evaluation-standard.md`           | 0      |
-| AI Attribution                | `docs/standards/ai-attribution-standard.md`             | 6      |
-| Architecture Documentation    | `docs/standards/architecture-documentation-standard.md` | 4      |
-| Auto-Commit GitOps            | `docs/standards/auto-commit-gitops-standard.md`         | 6      |
-| Badge (shell)                 | `docs/standards/badge-standard.md`                      | 5      |
-| Badge Quality (agent)         | `docs/standards/badge-standard.md`                      | 3      |
-| Changelog                     | `docs/standards/changelog-standard.md`                  | 6      |
-| CI Pipeline                   | `docs/standards/ci-pipeline-standard.md`                | 6      |
-| Code Documentation            | `docs/standards/code-documentation-standard.md`         | 3      |
-| Commit Conventions            | `docs/standards/commit-conventions-standard.md`         | 6      |
-| CS Project Architecture       | `docs/standards/cs-project-architecture-standard.md`    | 4      |
-| Git History Cleanup           | `docs/standards/git-history-cleanup-standard.md`        | 5      |
-| Git Identity Security         | `docs/standards/git-identity-security-standard.md`      | 6      |
-| GitHub Topics                 | `docs/standards/github-topics-standard.md`              | 5      |
-| .gitignore                    | `docs/standards/gitignore-standard.md`                  | 7      |
-| Language                      | `docs/standards/language-standard.md`                   | 7      |
-| Lefthook                      | `docs/standards/auto-commit-gitops-standard.md`         | 6      |
-| License                       | `docs/standards/license-standard.md`                    | 4      |
-| Link Rot                      | `docs/standards/link-rot-standard.md`                   | 4      |
-| Naming Conventions            | `docs/standards/naming-conventions-standard.md`         | 5      |
-| Overview Documentation        | `docs/standards/overview-documentation-standard.md`     | 4      |
-| Path Agnosticism              | `docs/standards/path-agnosticism-standard.md`           | 4      |
-| README Quality                | `docs/standards/README-standard.md`                     | 8      |
-| Repo Structure                | `docs/standards/repo-structure-standard.md`             | 7      |
-| Safe Wrappers                 | `docs/standards/safe-wrappers-standard.md`              | 4      |
-| Secrets Management (sops/age) | `docs/standards/secrets-management-standard.md`         | 4      |
-| SVG Screenshots               | `docs/standards/svg-screenshots-standard.md`            | 5      |
-| Tool Versions (mise)          | `docs/standards/tool-versions-standard.md`              | 5      |
-| Trivy Secrets                 | `docs/standards/ci-pipeline-standard.md`                | 5      |
-| Self-Consistency              | `docs/standards/self-consistency-standard.md`           | 1      |
+| Standard | File | Checks |
+|----------|------|-------|
+| ADR | `adr-standard.md` | 5 |
+| AI Attribution | `ai-attribution-standard.md` | 6 |
+| Auto-Commit GitOps | `auto-commit-gitops-standard.md` | 6 |
+| Badge (shell) | `badge-standard.md` | 5 |
+| Badge Quality (agent) | `badge-standard.md` | 3 |
+| Changelog | `changelog-standard.md` | 6 |
+| CI Pipeline | `ci-pipeline-standard.md` | 6 |
+| Commit Conventions | `commit-conventions-standard.md` | 6 |
+| CS Project Architecture | `cs-project-architecture-standard.md` | 4 |
+| Git History Cleanup | `git-history-cleanup-standard.md` | 5 |
+| GitHub Topics | `github-topics-standard.md` | 5 |
+| .gitignore | `gitignore-standard.md` | 7 |
+| Lefthook | `auto-commit-gitops-standard.md` | 6 |
+| License | `license-standard.md` | 4 |
+| Naming Conventions | `naming-conventions-standard.md` | 5 |
+| Path Agnosticism | `path-agnosticism-standard.md` | 4 |
+| README Quality | `README-standard.md` | 8 |
+| Repo Structure | `repo-structure-standard.md` | 7 |
+| Secrets Management (sops/age) | `secrets-management-standard.md` | 4 |
+| SVG Screenshots | `svg-screenshots-standard.md` | 5 |
+| Tool Versions (mise) | `tool-versions-standard.md` | 5 |
+| Trivy Secrets | `ci-pipeline-standard.md` | 5 |
+| Self-Consistency | `self-consistency-standard.md` | 1 |
 
-**Total: 31 standards, 152 checks**
+**Total: 23 standards, 120 checks** (106 shell + 9 agent-pending + 5 tool-availability)
 
 ## CI / exit codes
 

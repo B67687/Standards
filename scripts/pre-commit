@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# === Architectural purpose ===
+# Identity gate: verifies the COMMITTER (person creating the commit) has the
+# expected identity. Catches accidental local misconfiguration before a commit
+# is made. Does NOT check the author, because the author can legitimately
+# differ during rebase, amend, or cherry-pick operations.
+#
+# The author field is attribution metadata. The committer field is who
+# is responsible for the commit object. They can differ.
+
+allowed_name="B67687"
+allowed_email="111849193+B67687@users.noreply.github.com"
+
+extract_name() {
+    sed -n 's/^\([^<]*\) <[^>]*>.*$/\1/p' | sed 's/[[:space:]]*$//'
+}
+
+extract_email() {
+    sed -n 's/^[^<]*<\([^>]*\)>.*$/\1/p'
+}
+
+# Only check committer — author can be anyone (rebase preserves originals)
+committer_ident="$(git var GIT_COMMITTER_IDENT)"
+committer_name="$(printf '%s\n' "$committer_ident" | extract_name)"
+committer_email="$(printf '%s\n' "$committer_ident" | extract_email)"
+
+if [[ "$committer_name" != "$allowed_name" || "$committer_email" != "$allowed_email" ]]; then
+    {
+        echo "Blocked commit: unexpected committer identity."
+        echo "  Committer name:  $committer_name"
+        echo "  Committer email: $committer_email"
+        echo "  Expected:        $allowed_name <$allowed_email>"
+        echo
+        echo "Fix your Git identity before committing:"
+        echo "  git config user.name \"$allowed_name\""
+        echo "  git config user.email \"$allowed_email\""
+    } >&2
+    exit 1
+fi
