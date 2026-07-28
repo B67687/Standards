@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# commit-msg --- Validate conventional commit format.
+# Installed globally but only enforces for specific repos.
+# To add a repo, add its remote to the TARGET_REPOS list below.
+
+set -euo pipefail
+
+TARGET_REPOS=(
+  "B67687/agentic-workflows"
+  # Add more repos: "owner/repo"
+)
+
+# Determine target repo: check remote origin URL
+remote_url="$(git config --get remote.origin.url 2>/dev/null || true)"
+target_match=""
+
+for repo in "${TARGET_REPOS[@]}"; do
+  if echo "$remote_url" | grep -q "$repo"; then
+    target_match="$repo"
+    break
+  fi
+done
+
+# If this repo is not in the target list, pass through silently
+if [ -z "$target_match" ]; then
+  exit 0
+fi
+
+commit_msg_file="$1"
+msg="$(cat "$commit_msg_file")"
+
+# Strip comments and leading blank lines for checking
+body="$(echo "$msg" | sed '/^#/d' | sed '/^$/d' | head -1)"
+
+# Conventional commit regex: type(scope)!: description
+if echo "$body" | grep -qE '^(feat|fix|refactor|docs|test|chore|perf|ci|revert|style|build)(\([a-zA-Z0-9._-]+\))?!?:\s'; then
+  exit 0
+fi
+
+# Allow merge commits and revert commits (git-generated)
+if echo "$body" | grep -qE '^(Merge|Revert)\s'; then
+  exit 0
+fi
+
+# Allow checkpoint-style English commits (imperative mood, no colon prefix)
+# Only if they start with a capital letter and are >10 chars
+if echo "$body" | grep -qE '^[A-Z][a-z]+\s' && [ "${#body}" -gt 10 ]; then
+  # Checkpoint commits are OK for agent workflow repos
+  exit 0
+fi
+
+# Reject: too short, lowercase start, or clearly a bad message
+cat >&2 <<EOF
+❌ Commit message does not follow conventions.
+
+Expected format:
+  <type>: <description>
+  feat: add user authentication
+  fix(api): handle null response
+  refactor!: extract validation module
+
+For checkpoint commits (agent save points), use imperative mood English:
+  Add validation to registration endpoint
+  Fix duplicate task creation
+
+Your message:
+  $body
+
+To bypass this hook temporarily:
+  git commit --no-verify -m "your message"
+EOF
+exit 1

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "standards": {
+      "type": "local",
+      "command": ["node", "/home/nami/projects/dev/standards/mcp/server.js"],
+      "enabled": true
+    }
+  }
+}

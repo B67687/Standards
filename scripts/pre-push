@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# === Architectural purpose ===
+# Integrity gate: verifies every pushed commit has a valid signature.
+# Does NOT check author or committer identity — those are attribution metadata
+# and were already validated at commit time by pre-commit.
+#
+# The signature proves the commit was created by someone holding the expected
+# SSH key, which is tied to the B67687 identity. This is stronger than checking
+# the name field, because a name can be spoofed but a signature cannot.
+#
+# Force-push exception: history rewrites (filter-repo, rebase) inherently
+# strip signatures. Force-push is an explicit dangerous action — the user has
+# acknowledged the risk. We allow unsigned commits through but warn about them.
+
+allowed_name="B67687"
+allowed_email="111849193+B67687@users.noreply.github.com"
+zero_sha="0000000000000000000000000000000000000000"
+
+check_commit() {
+    local commit="$1"
+    local is_force="$2"   # "true" | "false"
+    local sig subject
+
+    sig="$(git show -s --format='%G?' "$commit")"
+    subject="$(git show -s --format='%h %s' "$commit")"
+
+    if [[ "$sig" != "G" ]]; then
+        if [[ "$is_force" == "true" ]]; then
+            echo "  [unsigned, force push] $subject" >&2
+            return 0
+        fi
+        {
+            echo "Blocked push: commit is not locally verified as a good signature."
+            echo "  Commit:    $subject"
+            echo "  Signature: $sig"
+            echo "  Sign all commits with: git rebase --root -S --rebase-merges"
+        } >&2
+        exit 1
+    fi
+}
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+    [[ -z "${local_ref:-}" ]] && continue
+
+    if [[ "$local_sha" == "$zero_sha" ]]; then
+        # Deleting a ref — nothing to check
+        continue
+    fi
+
+    # Detect force-push: remote exists AND remote SHA is not ancestor of local SHA
+    is_force="false"
+    if [[ "$remote_sha" != "$zero_sha" ]] && \
+       ! git merge-base --is-ancestor "$remote_sha" "$local_sha" 2>/dev/null; then
+        is_force="true"
+    fi
+
+    while read -r commit; do
+        [[ -n "$commit" ]] && check_commit "$commit" "$is_force"
+    done < <(git rev-list "$local_sha" --not --remotes)
+done

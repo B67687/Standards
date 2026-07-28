@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# prepare-commit-msg --- Append AI attribution trailer for AI-assisted commits.
+#
+# Reads these environment variables (must be set by AI harness):
+#   AI_COMMIT=1          — enables AI attribution
+#   AI_MODEL             — e.g., "DeepSeek V4 Flash (Max)"
+#   AI_HARNESS           — e.g., "oh-my-openagent (Sisyphus)"
+#
+# For --amend and rebase: skips if trailer already present (no dupes).
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="${1:-}"
+COMMIT_SOURCE="${2:-}"   # (empty)=fresh, message, template, merge, squash, commit
+
+# ── Exit early if not AI-driven ──────────────────────────────────────────
+if [ "${AI_COMMIT:-0}" != "1" ]; then
+  exit 0
+fi
+
+model="${AI_MODEL:-}"
+harness="${AI_HARNESS:-}"
+if [ -z "$model" ] || [ -z "$harness" ]; then
+  echo "WARNING: AI_COMMIT=1 but AI_MODEL or AI_HARNESS empty — skipping" >&2
+  exit 0
+fi
+
+# ── Skip if trailer already exists (--amend, rebase replay) ──────────────
+if grep -q "^Co-Authored-By:" "$COMMIT_MSG_FILE" 2>/dev/null; then
+  exit 0
+fi
+
+# ── Build trailer ────────────────────────────────────────────────────────
+email_model="$(echo "$model" | tr '[:upper:]' '[:lower:]' | sed 's/[ \/()]/-/g; s/--*/-/g; s/-$//')"
+email_harness="$(echo "$harness" | sed 's/ (.*)//' | tr '[:upper:]' '[:lower:]' | sed 's/[ \/()]/-/g; s/--*/-/g; s/-$//')"
+
+trailer="Co-Authored-By: $model via $harness <${email_model}+${email_harness}@models.local>"
+
+# ── Append to commit message ─────────────────────────────────────────────
+last_line="$(tail -1 "$COMMIT_MSG_FILE" 2>/dev/null || true)"
+[ -n "$last_line" ] && echo "" >> "$COMMIT_MSG_FILE"
+echo "$trailer" >> "$COMMIT_MSG_FILE"
