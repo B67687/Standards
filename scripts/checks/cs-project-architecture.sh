@@ -12,18 +12,16 @@
 
 ALL_STANDARDS+=("cs-project-architecture")
 
-checks_cs_project_architecture() {
-  # Early skip: only run on CS project repos
-  if [ ! -d "${repo}/src" ] && [ ! -d "${repo}/app" ] && [ ! -f "${repo}/go.mod" ] && [ ! -f "${repo}/pom.xml" ] && [ ! -f "${repo}/Cargo.toml" ]; then
-    return 0
-  fi
   CURR_STANDARD="cs-project-architecture"
   _check_header "${CURR_STANDARD}"
 
   local repo="${1:-${REPO_PATH}}"
   [ -n "${repo}" ] || repo="${PWD}"
 
-  # Look for source root — common locations
+  # Early skip: non-CS projects (no source code directories or manifests)
+  if [ ! -d "${repo}/src" ] && [ ! -d "${repo}/app" ] && [ ! -f "${repo}/go.mod" ] && [ ! -f "${repo}/pom.xml" ] && [ ! -f "${repo}/Cargo.toml" ]; then
+    return 0
+  fi
   local src_root=""
   for candidate in "${repo}/src" "${repo}/app" "${repo}/source" "${repo}"; do
     if [ -d "${candidate}" ]; then
