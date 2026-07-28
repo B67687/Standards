@@ -34,7 +34,7 @@ checks_naming_conventions() {
     base="$(basename "${dir}")"
     # Skip standard exceptions
     case "${base}" in
-      .git|.github|.omo|src|app|content|node_modules) continue ;;
+      .git|.github|.omo|.opencode|src|app|content|node_modules) continue ;;
     esac
     if ! [[ "${base}" =~ ^[a-z][a-z0-9-]*$ ]]; then
       violations=true

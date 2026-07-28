@@ -1,0 +1,13 @@
+/*
+!/.gitignore
+!/.editorconfig
+!/.commitlintrc.json
+!/.pre-commit-config.yaml
+!/.github/
+!/*.md
+!/docs/
+!/scripts/
+!/Makefile
+!/mise.toml
+!/HANDOVER.md
+!/.gitattributes

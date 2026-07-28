@@ -56,20 +56,32 @@ checks_gitignore() {
     _check_fail "root-files-whitelisted" ".gitignore not found"
   fi
 
-  # ── Check 4: Secret/cert blacklist patterns ────────────────────────────
+  # ── Check 4: Secret/cert patterns are excluded (explicitly or via whitelist) ──
   if [ -f "${repo}/.gitignore" ]; then
+    local has_blocklist
+    has_blocklist=false
+    grep -qE '\\.env|\\*\\.pem|\\*\\*/secrets\\*|\\*\\.key' "${repo}/.gitignore" && has_blocklist=true
+    local has_whitelist
+    has_whitelist=false
+    grep -qE '^\\*$|^/\\*$' "${repo}/.gitignore" && has_whitelist=true
     _check "secret-blacklist" \
-      ".gitignore contains secret/cert patterns (.env, *.pem, secrets, *.key)" \
-      grep -qE '\.env|\*\.pem|\*\*/secrets\*|\*\.key' "${repo}/.gitignore"
+      ".gitignore excludes secret/cert patterns (.env, *.pem, secrets, *.key)" \
+      test "${has_blocklist}" = true -o "${has_whitelist}" = true
   else
     _check_fail "secret-blacklist" ".gitignore not found"
   fi
 
-  # ── Check 5: Build artifact blacklist patterns ─────────────────────────
+  # ── Check 5: Build artifact patterns are excluded (whitelist or explicit) ─
   if [ -f "${repo}/.gitignore" ]; then
+    local has_artifacts
+    has_artifacts=false
+    grep -qE 'build/|dist/|target/|node_modules/' "${repo}/.gitignore" && has_artifacts=true
+    local wl
+    wl=false
+    grep -qE '^\\*$|^/\\*$' "${repo}/.gitignore" && wl=true
     _check "build-blacklist" \
-      ".gitignore contains build artifact patterns (build/, dist/, target/, node_modules/)" \
-      grep -qE 'build/|dist/|target/|node_modules/' "${repo}/.gitignore"
+      ".gitignore excludes build artifact patterns (build/, dist/, ...)" \
+      test "${has_artifacts}" = true -o "${wl}" = true
   else
     _check_fail "build-blacklist" ".gitignore not found"
   fi
