@@ -11,6 +11,7 @@
 #
 
 ALL_STANDARDS+=("cs-project-architecture")
+checks_cs_project_architecture() {
 
   CURR_STANDARD="cs-project-architecture"
   _check_header "${CURR_STANDARD}"
