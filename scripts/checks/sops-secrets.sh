@@ -31,14 +31,11 @@ checks_sops_secrets() {
   _check "sops-config-exists" ".sops.yaml exists at repo root" \
     test -f "${repo}/.sops.yaml"
 
-  # ── Check 2: .env excluded (explicitly or via whitelist) ────────────────
+  # ── Check 2: .gitignore contains .env pattern ─────────────────────────
   if [ -f "${repo}/.gitignore" ]; then
-    local has_env=false has_wl=false
-    grep -qE '(^|/)[.]env([^a-z]|$)' "${repo}/.gitignore" 2>/dev/null && has_env=true
-    grep -qE '^[*]$|^/[*]$' "${repo}/.gitignore" 2>/dev/null && has_wl=true
     _check "env-in-gitignore" \
-      ".env excluded from git (explicitly or via whitelist)" \
-      test "${has_env}" = true -o "${has_wl}" = true
+      ".gitignore contains .env pattern (to prevent committing secrets)" \
+      grep -qE '(^|/)\.env([^a-z]|$)' "${repo}/.gitignore"
   else
     _check_fail "env-in-gitignore" ".gitignore not found"
   fi

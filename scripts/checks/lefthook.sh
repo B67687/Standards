@@ -65,8 +65,7 @@ checks_lefthook() {
     _check "parallel-mode" \
       "pre-commit handles parallelism internally" \
       test 1 = 1
-    # CI skip: lefthook not on PATH
-  if command -v lefthook _check "lefthook-installed">/dev/null; then _check "lefthook-installed" \
+    _check "lefthook-installed" \
       "lefthook or pre-commit binary on PATH" \
       bash -c 'command -v lefthook &>/dev/null || command -v pre-commit &>/dev/null'
     _check "commitlint-integration" \
@@ -111,8 +110,7 @@ checks_lefthook() {
   fi
 
   # ── Check 5: Lefthook binary installed ──────────────────────────────────
-  # CI skip: lefthook not on PATH
-  if command -v lefthook _check "lefthook-installed">/dev/null; then _check "lefthook-installed" "lefthook binary is on PATH" \
+  _check "lefthook-installed" "lefthook binary is on PATH" \
     bash -c 'command -v lefthook &>/dev/null'
 
   # ── Check 6: Commitlint integration ─────────────────────────────────────
