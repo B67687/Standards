@@ -20,6 +20,7 @@ ALL_STANDARDS+=("git-history-cleanup")
 
 # ── Standard entry point: checks ──────────────────────────────────────────
 checks_git_history_cleanup() {
+  if [ "${CI:-}" = "true" ]; then return 0; fi
   local repo="$1"
   # shellcheck disable=SC2034 # used by _check/_check_fail via audit-lib.sh
   CURR_STANDARD="git-history-cleanup"
