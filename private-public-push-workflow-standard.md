@@ -2,30 +2,24 @@
 
 ## What
 
-The release path for a two-repo project (`<Project>-Dev` private / `<Project>` public): **all** work commits land in the private repo; the public repo receives only **thematically squashed, signed commits** after explicit user approval. This supersedes the delete-and-recreate release path in [private-public-split-standard.md](./private-public-split-standard.md) for ongoing releases (that standard's scrub+reset remains the one-time initial-publication path).
+The release path for a two-repo project (`<Project>-Dev` private / `<Project>` public): work happens in the **local ↔ private** loop; the public repo receives only **thematically squashed, signed commits** on explicit user decision. After a release, private and public **mirror each other** — identical content, identical squashed history. History is **append-only**: published commits are never rewritten.
 
 ## Why
 
-1. **History hygiene** — the public git log reads as intentional units (`feat:`/`fix:`/`docs:`/`refactor:`), not WIP noise.
-2. **No contributor graph bloat** — raw commits are squashed away; the graph shows only clean, user-authorized commits.
-3. **Private = staging** — back-and-forth, experiments, and agent-driven iterations stay invisible.
-4. **Release discipline** — public push requires an explicit user gate. No accidental publication of half-baked work.
-5. **It is the only sustainable model** — private and public share the same content; squashing rewrites history, so you cannot incrementally squash a shared-history repo without diverging the remotes. The squash therefore happens at release time on a staging branch, then a clean fast-forward push publishes it.
+1. **History hygiene** — the public (and post-release private) git log reads as intentional units (`feat:`/`fix:`/`docs:`/`refactor:`), not WIP noise.
+2. **No contributor graph bloat** — raw commits are squashed away before anything public; the graph shows only clean, user-authorized commits.
+3. **Scratch stays scratch** — the private repo is a scratchpad: working cycles accumulate there between releases, and nothing about the scratch is precious or kept for its own sake.
+4. **Release discipline** — public push happens only on an explicit user decision that the scratch is good enough. No accidental publication of half-baked work.
+5. **Append-only is the only sustainable mode** — a full-history rewrite is not viable for anything large. Releases append to existing history; what's public stays public.
 
 ## Convention
 
 | Repo | Purpose | Visibility | Push |
 |------|---------|------------|------|
-| `<Project>-Dev` | Source of truth — all work | Private | Any commit, any time |
-| `<Project>` | Public snapshot | Public | Squashed thematic commits, explicit user go only |
+| `<Project>-Dev` | Scratchpad — all work | Private | Any commit, any time |
+| `<Project>` | Public snapshot, mirror of private after release | Public | Squashed thematic commits, explicit user go only |
 
-Local branches during a release:
-
-| Branch | Purpose |
-|--------|---------|
-| `main` | Current work (tracked to `*-Dev` remote) |
-| `backup-pre-squash` | Snapshot of raw history before squashing — the recovery path |
-| `squash-work` | Staging branch where thematic squashing happens |
+Single branch: `main` (tracked to `*-Dev` remote; pushed to `public` at release).
 
 ## Workflow
 
@@ -34,51 +28,55 @@ Local branches during a release:
      git status && git remote -v && git log --oneline -5
      origin MUST point to <Project>-Dev.git, else STOP and report.
 
-2. Work normally: commit, push — all to origin (private). No attribution.
+2. Work in the local ↔ private loop: commit, push — all to origin (private).
+   GitHub CI runs on the PRIVATE repo, validating scratch as it happens;
+   if CI is unavailable (e.g. Actions minutes exhausted), run the repo's
+   local check (e.g. ./scripts/check.sh).
      GIT_MASTER=1 GIT_COMMITTER_DATE="$(git log -1 --format=%aD)" git-safe-commit -S -m "<msg>"
      git-safe-push origin main
 
-3. When the user says "ready to publish" (explicit go — never assume):
-     a. git branch backup-pre-squash          # recovery snapshot of raw history
-     b. git checkout -b squash-work           # staging branch
-     c. git rebase -i <base>                  # squash raw commits into THEMES:
-        - one commit per logical unit (feature, fix, docs, refactor)
-        - conventional subjects (see below)
-     d. git log --oneline                     # review the themed list
-     e. verify signatures: git log --format="%h %G?" -> G on EVERY commit
-     f. git checkout main && git merge squash-work --ff-only
+3. When the user decides the scratch is good enough to release (explicit go —
+   never assume), squash thematically the delta since the last release tip:
+     - group by behavior / logical unit (feature, fix, docs, refactor, chore)
+     - conventional subjects, imperative ~50-char
+     - all signed: git log --format="%h %G?" -> G on EVERY commit
+     - no agent attribution
 
-4. Push public (clean fast-forward):
-     git-safe-push public main
+4. Propagate local -> private -> public:
+     a. push the squashed history to private:  git-safe-push origin main
+     b. on explicit user go, push public:      git-safe-push public main
 
-5. Verify: public main == private main (same SHA), working tree CLEAN.
+5. Verify: public main == private main == local main (same SHA),
+   working tree CLEAN. The repos now mirror each other.
 
-6. Clean up after user confirms public is correct:
-     git branch -D squash-work backup-pre-squash
+6. Repeat for the next release: squash only the delta since this tip — append,
+   never rewrite. The value judgement on when to make an appended thematic
+   commit is a session-time decision between the user and the agent.
 ```
 
 ## Thematic squash rules
 
-- Group by **behavior / logical unit**, not by time or by file. (Reference execution: 31 raw commits → 8 themed commits.)
+- Group by **behavior / logical unit**, not by time or by file. (Reference executions: ithmb 1.4.0 — 31 raw → 8 themed commits; Development-Protocol 2026-08-06 — 62 raw → 12 themed commits.)
 - Conventional prefixes: `feat:` new capability; `fix:` correction; `docs:` documentation; `refactor:` behavior-preserving restructure; `chore:` maintenance.
 - Imperative mood, ~50-char subject, no trailing period.
 - **NEVER include agent attribution** — no `Co-authored-by`, no tool footers. The repo owner is the sole author.
 - All squashed commits signed (`-S`); `git log --format="%h %G?"` must show `G` on every commit.
+- **Append-only**: squash only the delta since the last release tip. Published commits are NEVER rewritten. A full-history reset is not a routine option (see One-time reset).
 
-## One-time reset (delete + re-upload)
+## One-time reset (delete + re-upload) — NOT routine
 
-When public history is already messy and a clean slate is wanted (e.g., first standardization of a repo that was pushed raw):
+For establishing clean history ONCE per repo (e.g. first standardization of a repo that was pushed raw). Executed for Development-Protocol on 2026-08-06. Do not treat as a routine release path:
 
-1. User confirms the private repo is exactly as wanted.
-2. User gives explicit go to replace the public repo.
-3. Delete the public repo on GitHub (`gh repo delete B67687/<Project>`), recreate empty with the same name.
-4. From private HEAD, create orphan branch `public-clean`; optionally split the final state into thematic commits.
-5. `git push public main` (fresh repo accepts it as the root).
-6. Verify tree equality: `git ls-tree` diff shows public tree == private tree, zero private-only paths (e.g. `.omo/`).
+1. User confirms the private repo is exactly as wanted AND gives explicit go.
+2. Delete the public repo on GitHub (`gh repo delete B67687/<Project>` — user must run it; agent permission-denied), recreate empty with the same name.
+3. From private HEAD, create orphan branch `public-clean`; optionally split the final state into thematic commits; strip private-only paths (e.g. `.omo/`) from every commit.
+4. `git push public main` (fresh repo accepts it as the root).
+5. Verify tree equality: `git ls-tree` diff shows public tree == private tree, zero private-only paths.
+6. Collapse the private repo to the same squashed history so the two repos mirror each other.
 
 ## Applied to
 
 - B67687/Standards → B67687/Standards-Dev
-- B67687/Development-Protocol → B67687/Development-Protocol-Dev
+- B67687/Development-Protocol → B67687/Development-Protocol-Dev (reference execution: 62 raw → 12 themed, 2026-08-06)
 - B67687/Ithmb-Codec-Web → B67687/Ithmb-Codec-Web-Dev (reference execution: 1.4.0 — 31 raw → 8 signed themed commits)
 - B67687/Lessons → B67687/Lessons-Dev
