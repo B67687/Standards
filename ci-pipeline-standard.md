@@ -274,3 +274,82 @@ ithmb-codec has the best existing setup. To bring it to full standard, add:
 5. Add conventional commits workflow
 6. Add dependency review
 7. Add release workflow (when needed)
+## No-PR Variant: Push-Triggered Workflows
+
+Repos that disable pull requests entirely (Settings → General → Features →
+"Pull requests" off — the deepseek-harness model, see the push-workflow
+standard) still need L1 CI. **The fix: trigger on `push` to `main` instead of
+`pull_request`.** The dev repo (`<Project>-Dev`) becomes the gate: pushes there
+run CI before anything reaches the public repo. Dependabot is NOT required —
+its PR-automation is replaced by the repo owner's own dependency-update
+process, and PR-triggered workflow sections become dead code (harmless, but
+strippable).
+
+### L1: `.github/workflows/test.yml` (push-only)
+
+```yaml
+name: Test
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: <build command>
+      - name: Test
+        run: <test command>
+```
+
+### L1: `.github/workflows/secrets.yml` (push-only, gitleaks full-history)
+
+```yaml
+name: Secrets
+on:
+  push:
+    branches: [main]
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks scan (full history)
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz | tar -xz -C /tmp
+          /tmp/gitleaks git --no-banner --log-opts="--no-merges --all" --exit-code 1
+```
+
+### L2: `.github/workflows/codeql.yml` (push-only + schedule)
+
+```yaml
+name: CodeQL
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: <language>
+      - run: <build command>
+      - uses: github/codeql-action/analyze@v3
+```
+
+**Local parity (L0)**: keep the pre-commit hook (gitleaks + lint + tests) so
+nothing leaks from the dev loop — CI is the second gate, not the first. Reference
+executions: ithmb-codec (gitleaks-action + cargo audit), ithmb-codec-web
+(manual-download gitleaks + 3-browser Playwright), ithmb-plugin (gitleaks CI
+job). The `pull_request:` triggers left in existing workflows become dead code
+once PRs are disabled — safe to leave, cleaner to strip.

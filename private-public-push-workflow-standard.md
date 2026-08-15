@@ -2,7 +2,25 @@
 
 ## What
 
-The release path for a two-repo project (`<Project>-Dev` private / `<Project>` public): work happens in the **local ↔ private** loop; the public repo receives only **thematically squashed, signed commits** on explicit user decision. After a release, private and public **mirror each other** — identical content, identical squashed history. History is **append-only**: published commits are never rewritten.
+The release path for a project with a **local-dev airlock + private dev + public release** split: work happens in the **local ↔ github-dev** loop; the public repo receives only **thematically squashed, signed commits** on explicit user decision. After a release, dev and public **mirror each other** — identical content, identical squashed history. History is **append-only**: published commits are never rewritten.
+
+## The four-layer naming model (canonical since 2026-08-11)
+
+Every project under this standard uses FOUR named layers. The local-dev layer is a **non-git, physically untrackable folder** that acts as an airlock for private test files, unreleasable artifacts, and session handovers.
+
+| Layer | Location | Role | Pushes to GitHub? |
+|------|----------|------|-------------------|
+| **local** | `<project>-working-dir` (e.g. `/home/nami/projects/dev/Ithmb-Codec-Web/`) | authoritative working tree, no suffix | pushes to **github-dev** every time |
+| **local-dev** | `<project>-Local/` (e.g. `Ithmb-Codec-Web-Local/`) | private test files, unreleasable artifacts, handover docs | **never** (not a git repo — physically untrackable) |
+| **github-dev** | `<Project>-Dev` on GitHub | receives every local push; CI runs there; visibility toggles public/private | it IS GitHub (usually private) |
+| **github-public** | `<Project>` on GitHub | the release repo — append-only, pushed only on explicit user go | it IS GitHub (live) |
+
+**Remote naming differs by project family — do not mix these up:**
+
+- **Web projects** (e.g. Ithmb-Codec-Web): `origin` = github-public, `dev` = github-dev.
+- **Codec/plugin projects** (e.g. Ithmb-Codec, Imageglass-Ithmb-Plugin, Standards): `origin` = github-dev, `public` = github-public.
+
+**CI billing caveat (Actions)**: GitHub Actions free minutes apply to PUBLIC repos. A private github-dev repo gets NO Actions. Workaround: temporarily flip github-dev PUBLIC (`gh repo edit <owner>/<Project>-Dev --visibility public`), run/rerun CI, then flip back to PRIVATE. The safety guard: github-dev must never hold local-dev (airlock) content — private test files / handovers — or the public window leaks it.
 
 ## Why
 
@@ -14,26 +32,30 @@ The release path for a two-repo project (`<Project>-Dev` private / `<Project>` p
 
 ## Convention
 
-| Repo | Purpose | Visibility | Push |
-|------|---------|------------|------|
-| `<Project>-Dev` | Scratchpad — all work | Private | Any commit, any time |
-| `<Project>` | Public snapshot, mirror of private after release | Public | Squashed thematic commits, explicit user go only |
+| Repo / layer | Purpose | Visibility | Push |
+|-------------|---------|------------|------|
+| `local` | Authoritative working tree | local disk | Any commit, any time → github-dev |
+| `local-dev` | Private airlock: test files, handovers | non-git folder | **never** |
+| `<Project>-Dev` | Scratchpad — all work | Private (flip public only for CI runs) | Any commit, any time |
+| `<Project>` | Public snapshot, mirror of dev after release | Public | Squashed thematic commits, explicit user go only |
 
-Single branch: `main` (tracked to `*-Dev` remote; pushed to `public` at release).
+Single branch: `main` (tracked to `<Project>-Dev` remote; pushed to the public remote at release).
 
 ## Workflow
 
 ```
 1. CONFIRM Dev-first (every session, before any commit):
      git status && git remote -v && git log --oneline -5
-     origin MUST point to <Project>-Dev.git, else STOP and report.
+     origin MUST point to <Project>-Dev.git (web-family: the `dev` remote
+     must point to <Project>-Dev.git), else STOP and report.
 
-2. Work in the local ↔ private loop: commit, push — all to origin (private).
-   GitHub CI runs on the PRIVATE repo, validating scratch as it happens;
-   if CI is unavailable (e.g. Actions minutes exhausted), run the repo's
-   local check (e.g. ./scripts/check.sh).
+2. Work in the local ↔ github-dev loop: commit, push — all to the dev remote.
+   GitHub CI runs on the DEV repo, validating scratch as it happens. If the
+   dev repo is PRIVATE, CI gets NO Actions minutes (billing block) — flip the
+   dev repo PUBLIC temporarily for the run, then flip back (see caveat above).
+   If CI is unavailable entirely, run the repo's local check (e.g. ./scripts/check.sh).
      GIT_MASTER=1 GIT_COMMITTER_DATE="$(git log -1 --format=%aD)" git-safe-commit -S -m "<msg>"
-     git-safe-push origin main
+     git-safe-push origin main   # or: git-safe-push dev main (web-family)
 
 3. When the user decides the scratch is good enough to release (explicit go —
    never assume), squash thematically the delta since the last release tip:
@@ -42,9 +64,11 @@ Single branch: `main` (tracked to `*-Dev` remote; pushed to `public` at release)
      - all signed: git log --format="%h %G?" -> G on EVERY commit
      - no agent attribution
 
-4. Propagate local -> private -> public:
-     a. push the squashed history to private:  git-safe-push origin main
-     b. on explicit user go, push public:      git-safe-push public main
+4. Propagate local -> github-dev -> github-public:
+     a. push the squashed history to github-dev:  git-safe-push origin main
+        (web-family: git-safe-push dev main)
+     b. on explicit user go, push public:          git-safe-push public main
+        (web-family: git-safe-push origin main — the PUBLIC remote)
 
 5. Verify: public main == private main == local main (same SHA),
    working tree CLEAN. The repos now mirror each other.
@@ -78,5 +102,7 @@ For establishing clean history ONCE per repo (e.g. first standardization of a re
 
 - B67687/Standards → B67687/Standards-Dev
 - B67687/Development-Protocol → B67687/Development-Protocol-Dev (reference execution: 62 raw → 12 themed, 2026-08-06)
-- B67687/Ithmb-Codec-Web → B67687/Ithmb-Codec-Web-Dev (reference execution: 1.4.0 — 31 raw → 8 signed themed commits)
+- B67687/Ithmb-Codec → B67687/Ithmb-Codec-Dev (origin=dev, public=release)
+- B67687/Ithmb-Codec-Web → B67687/Ithmb-Codec-Web-Dev (web-family: origin=public, dev=github-dev; reference execution: 1.4.0 — 31 raw → 8 signed themed commits)
+- B67687/Imageglass-Ithmb-Plugin → B67687/Imageglass-Ithmb-Plugin-Dev (origin=dev, public=release)
 - B67687/Lessons → B67687/Lessons-Dev
