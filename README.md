@@ -18,7 +18,7 @@
 
 Cross-repo conventions and audit system for AI-enhanced software projects.
 
-**23 standards** defining convention rules for repos. **120 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
+**24 standards** defining convention rules for repos. **128 automated checks** enforce them. **Dashboard** tracks compliance across all repos.
 
 Built with AI assistance — see [CREDITS.md](./CREDITS.md).
 
@@ -93,6 +93,7 @@ standards/
 | CI Pipeline | `ci-pipeline-standard.md` | 6 |
 | Commit Conventions | `commit-conventions-standard.md` | 6 |
 | CS Project Architecture | `cs-project-architecture-standard.md` | 4 |
+| Dependency Management | `dependency-management-standard.md` | 8 |
 | Git History Cleanup | `git-history-cleanup-standard.md` | 5 |
 | GitHub Topics | `github-topics-standard.md` | 5 |
 | .gitignore | `gitignore-standard.md` | 7 |
@@ -108,7 +109,7 @@ standards/
 | Trivy Secrets | `ci-pipeline-standard.md` | 5 |
 | Self-Consistency | `self-consistency-standard.md` | 1 |
 
-**Total: 23 standards, 120 checks** (106 shell + 9 agent-pending + 5 tool-availability)
+**Total: 24 standards, 128 checks** (114 shell + 9 agent-pending + 5 tool-availability)
 
 ## CI / exit codes
 
