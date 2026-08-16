@@ -119,8 +119,33 @@ Non-standard sections may appear below the six standard types when they add stru
 ...
 ### Infrastructure
 - CI: CodeQL analysis...
+### Infrastructure
+- CI: CodeQL analysis...
 ```
 
+## GitHub Release Notes
+
+**The release body MUST contain ONLY the current version's section — never the full changelog file.**
+
+The failure this rule prevents: publishing a release whose notes dump every prior version's section (v1.1.3's notes containing v1.1.1, v1.1.0, v1.0.0). Each release describes exactly what changed in that release.
+
+Rules:
+1. Copy **only** the `## <version>` block for the release being published
+2. Do **not** include the `# Changelog` header or any other version's section
+3. Do **not** include `[Unreleased]` in release notes
+4. When a release's notes were published with the full-file dump, edit the release body to trim it to the single section (use `gh release edit <tag> --notes "<section>"`)
+
+## Editing Discipline (Pre-flight Read)
+
+**Read the ENTIRE target file before editing or appending to it.**
+
+The failure this rule prevents: appending a header or section to a file that already has one — producing duplicates (`# Changelog` twice), stray lines in the wrong section, or content inserted mid-structure. Appending without reading assumes the file is empty.
+
+Rules:
+1. Before ANY edit to an existing file: `read` the full file (or at minimum the full region around the insertion point) — verify what already exists
+2. When adding a new version section to `CHANGELOG.md`: confirm the file's existing header structure first (single `# Changelog`), then insert below it
+3. After the edit: re-read the modified region and verify no duplicate headers/lines were introduced
+4. When writing release notes: extract from the file, don't reconstruct from memory
 These are supplemental, not replacements. Keep them below the six standard types.
 
 ## Yanked Releases
