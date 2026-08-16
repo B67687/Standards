@@ -26,8 +26,8 @@ checks_dependency_management() {
   # ── Detect manifests and their canonical lockfiles ─────────────────────
   # manifest → lockfile mapping. A repo with no manifests is docs-only and
   # the standard explicitly skips it (no lockfile/bot/tier requirements).
-  local manifest lockfile
   local has_manifest=false
+
 
   # ── Check 1: lockfile exists for each manifest ─────────────────────────
   # package.json → package-lock.json (npm), yarn.lock, pnpm-lock.yaml
