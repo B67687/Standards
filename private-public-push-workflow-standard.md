@@ -41,6 +41,17 @@ Every project under this standard uses FOUR named layers. The local-dev layer is
 
 Single branch: `main` (tracked to `<Project>-Dev` remote; pushed to the public remote at release).
 
+## THE PUBLIC REPO IS NEVER A WORK SURFACE (hard rule)
+
+The **github-public** repo is the **release artifact only**. It is not where you diagnose, validate, fix, or iterate. Everything below applies to *every* interaction, even read-only ones:
+
+- **Never push to public** except a thematically-squashed commit on the explicit user go (step 4b).
+- **Never diagnose CI/check failures against the public repo.** If a workflow on public fails, the fix is made on the DEV repo (which carries the same workflow files), squashed, CI-gated on dev, and only then mirrored to public on user go. The public repo's CI result is *informational*, never a work item.
+- **Never pull the public repo's state into the working loop** except to read its tip SHA as the squash base (step 3) — and even that is best done from the `public` remote ref, not by checking it out.
+- **Read-only use of public is still "use".** Curling public URLs, watching public CI, or inspecting public history for reasons other than establishing the squash base is out of scope — route the equivalent check through the dev repo instead.
+
+If you catch yourself diagnosing a public-repo failure or preparing a public change before the dev repo has a green, squashed, user-authorized commit — STOP. The work belongs on dev.
+
 ## Workflow
 
 ```
