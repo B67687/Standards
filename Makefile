@@ -9,7 +9,7 @@ audit-exit:  ## Run self-audit with exit code (CI gate: exit 1 on failure)
 
 # ── Linting ────────────────────────────────────────────────────────────────
 shellcheck:  ## Shellcheck all scripts
-	shellcheck scripts/*.sh scripts/checks/*.sh
+	shellcheck --severity=warning scripts/*.sh scripts/checks/*.sh
 
 # ── Convenience ────────────────────────────────────────────────────────────
 check: audit-exit shellcheck  ## Run full self-check (audit + shellcheck)

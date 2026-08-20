@@ -19,7 +19,9 @@ ALL_STANDARDS+=("self-consistency")
 
 # ── Standard entry point: checks (audit-only, no fix functions) ───────────
 checks_self_consistency() {
-  if [ "${CI:-}" = "true" ]; then return 0; fi
+  # NOTE: The CI=true early-return was removed (2026-08-19) so this check
+  # actually runs in GitHub CI too. Previously CI was green partly BECAUSE
+  # of this skip, masking the self-consistency check everywhere.
   local repo="$1"
   # shellcheck disable=SC2034 # used by _check/_check_fail via audit-lib.sh
   CURR_STANDARD="self-consistency"

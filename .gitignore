@@ -11,3 +11,4 @@
 !/mise.toml
 !/HANDOVER.md
 !/.gitattributes
+/.env
