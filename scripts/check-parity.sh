@@ -43,13 +43,37 @@ fi
 # shellcheck source=/dev/null
 source "$CONFIG"
 
-: "${REPO_SLUG:?check-parity.config must set REPO_SLUG}"
-: "${WORKFLOWS:?check-parity.config must set WORKFLOWS}"
-: "${LOCAL_CMD:?check-parity.config must set LOCAL_CMD}"
+for var in REPO_SLUG WORKFLOWS LOCAL_CMD; do
+  if [[ -z "${!var:-}" ]]; then
+    echo "PARITY_ERROR: check-parity.config must set $var" >&2
+    exit 2
+  fi
+done
 EXPECT_LOCAL="${EXPECT_LOCAL:-pass}"
 EXPECT_REMOTE="${EXPECT_REMOTE:-success}"
 
-SHA="${1:-$(git rev-parse HEAD)}"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+SHA="${1:-$(git -C "$REPO_ROOT" rev-parse HEAD)}"
+
+# Same-commit guarantee (REVIEW CRITICAL 3.3): the local check runs against the
+# working tree, so it is only a valid comparison for the commit actually checked
+# out. Refuse unless (a) the requested SHA == checked-out HEAD and (b) the tree
+# has no source changes that would make local != that commit. Agent ephemera
+# under .omo/ is exempt (documented to never affect check results).
+LOCAL_HEAD="$(git -C "$REPO_ROOT" rev-parse HEAD)"
+if [[ "$SHA" != "$LOCAL_HEAD" ]]; then
+  echo "PARITY_ERROR: requested SHA ${SHA:0:12} != checked-out HEAD ${LOCAL_HEAD:0:12}" >&2
+  echo "  checkout the target commit first (or run parity on HEAD) so local and" >&2
+  echo "  remote compare the SAME commit (REVIEW 3.3)." >&2
+  exit 2
+fi
+DIRTY="$(git -C "$REPO_ROOT" status --porcelain | grep -v '^.. \.omo/' || true)"
+if [[ -n "$DIRTY" ]]; then
+  echo "PARITY_ERROR: working tree has uncommitted changes outside .omo/ that would" >&2
+  echo "  make local != the commit being compared (REVIEW 3.3):" >&2
+  echo "$DIRTY" >&2
+  exit 2
+fi
 
 if ! command -v gh >/dev/null 2>&1; then
   echo "PARITY_ERROR: gh CLI not found" >&2
