@@ -83,6 +83,26 @@ _check_pending() {
   ALL_RESULTS+=("pending|${CURR_STANDARD}|${id}|${desc}")
 }
 
+# ── _check_skip <id> <description> ────────────────────────────────────────
+# Record that a check was skipped (not applicable to this repo).
+# Skips are NOT counted as failures in exit-code mode.
+_check_skip() {
+  local id="$1" desc="$2"
+  _out "  ${YELLOW}⊘${NC} ${desc} (skipped — not applicable)"
+  ALL_RESULTS+=("skip|${CURR_STANDARD}|${id}|${desc}")
+  return 0
+}
+
+# ── _check_warn <id> <description> ───────────────────────────────────────
+# Record a warning (worth noting but not a failure).
+# Warnings are NOT counted as failures in exit-code mode.
+_check_warn() {
+  local id="$1" desc="$2"
+  _out "  ${YELLOW}⚠${NC} ${desc} (warning)"
+  ALL_RESULTS+=("warn|${CURR_STANDARD}|${id}|${desc}")
+  return 0
+}
+
 # ── _agent_eval_dir ─────────────────────────────────────────────────────
 # Return the path to the agent-evals directory, creating it if needed.
 _agent_eval_dir() {
@@ -121,7 +141,7 @@ _fix_run() {
 # ── report_summary ────────────────────────────────────────────────────────
 # Print a human-readable summary of all checks. Returns number of failures.
 report_summary() {
-  local pass=0 fail=0 pending=0 fixes=0 errors=0
+  local pass=0 fail=0 pending=0 fixes=0 errors=0 skips=0 warns=0
   local line
   _out ""
   _out "${BOLD}── Report ──────────────────────────────────────────${NC}"
@@ -132,10 +152,12 @@ report_summary() {
       pending*) pending=$((pending + 1)) ;;
       fix*)     fixes=$((fixes + 1)) ;;
       error*)   errors=$((errors + 1)) ;;
+      skip*)    skips=$((skips + 1)) ;;
+      warn*)    warns=$((warns + 1)) ;;
     esac
   done
-  _out "  ${GREEN}${pass} passed${NC}, ${RED}${fail} failed${NC}, ${YELLOW}${pending} pending${NC}, ${YELLOW}${fixes} fixes applied${NC}, ${RED}${errors} errors${NC}"
-  _out "  ${BOLD}Total:${NC} $((pass + fail + pending)) checks, $((fixes + errors)) actions"
+  _out "  ${GREEN}${pass} passed${NC}, ${RED}${fail} failed${NC}, ${YELLOW}${pending} pending${NC}, ${YELLOW}${fixes} fixes applied${NC}, ${RED}${errors} errors${NC}, ${YELLOW}${skips} skipped${NC}, ${YELLOW}${warns} warnings${NC}"
+  _out "  ${BOLD}Total:${NC} $((pass + fail + pending + skips + warns)) checks, $((fixes + errors)) actions"
   _out ""
   return 0
 }
