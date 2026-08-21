@@ -12,3 +12,6 @@
 !/HANDOVER.md
 !/.gitattributes
 /.env
+
+# Private agent workspace — NEVER public
+.omo/*
