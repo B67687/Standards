@@ -78,6 +78,38 @@ Renovate is the canonical bot. Rationale: it **groups** dependency updates into 
 9. **T0 MUST be untouched** — no updates, no scanning, no attention. Risk is consciously accepted
 10. **T3 adds the audit gate** — CI fails on known critical vulnerabilities (`cargo audit`, `npm audit`, `osv-scanner`), plus supply-chain verification and SBOM for releases
 
+11. **Lockfile MUST be enforced in CI** — install with a frozen-lockfile command (`npm ci`, `cargo --locked`, `uv sync --locked`, `poetry install --locked`); never a bare update on build
+12. **Only trusted sources** — pin resolution to official registries (crates.io, npmjs); forbid unvetted git/path/alternate-registry sources unless explicitly allowlisted
+13. **No install scripts by default** — ignore package install scripts unless individually allowlisted (npm `ignore-scripts` + `allow-scripts`); review before enabling
+
+## Supply-Chain Security
+
+The tier above sets *when* dependencies move. This section sets *what is allowed in* and *how it is verified* — the security dimension all frameworks converge on ([SLSA](https://slsa.dev), [NIST SSDF SP 800-218](https://csrc.nist.gov/pubs/sp/800/218/final), [OWASP A03:2025](https://owasp.org/Top10/A03_2025-Software_Supply_Chain_Failures/), [CNCF Best Practices](https://tag-security.cncf.io)), mapped onto the tier model so each tier carries exactly the attention it needs.
+
+### Security posture by tier
+
+| Tier | Posture | Key requirements added |
+|------|---------|------------------------|
+| T0 | Conscious acceptance | None — risk deliberately accepted, not scanned
+| T1 | Source + integrity | Trusted sources only; lockfile enforced; frozen install
+| T2 | + scanning gate | SCA gate in CI fails on critical/high; review before major bumps
+| T3 | + provenance & SBOM | Signed provenance (SLSA L2+); SBOM generated in CI; source whitelist
+
+### The six controls
+
+1. **Inventory everything** — include transitive deps. T3 generates an SBOM (CycloneDX or SPDX) in CI covering the CISA/NSA/FBI [2026 Minimum Elements for an SBOM](https://www.cisa.gov) (supersedes NTIA 2021).
+2. **Scan continuously, gate on risk** — SCA in CI fails on critical/high (T3) or high (T2). Remediate criticals within days. `cargo audit`, `npm audit`, `osv-scanner`, Dependency-Check.
+3. **Trusted sources + integrity** — official registries only, source-whitelisted; lockfiles carry content hashes; prefer signed packages; verify registry signatures where available.
+4. **Provenance / attestation** — build integrity claims (SLSA L1–L3). T3: signed provenance, publish with attestation (npm `--provenance` / Sigstore).
+5. **Harden the pipeline** — least privilege, MFA, env-scoped secrets, immutable artifacts, staged/canary rollouts, separation of duties in CI/CD.
+6. **Minimize + deliberate choice** — remove unused deps, prefer maintained ones, upgrade deliberately (never `*`/`latest`), pin via lockfile.
+
+### Source whitelisting (dependency confusion / typosquatting)
+
+- **Rust/Cargo**: `cargo-deny` `[sources]` — allow only `crates.io-index`; deny git/path/unknown. The strongest mainstream source control.
+- **npm**: scoped internal names (`@yourorg/pkg`), pin scopes to the private registry in `.npmrc`, reserve internal names on the public registry (empty placeholders), disable install scripts by default.
+- General: verify package identity (registry metadata, changelog) before adding; treat typosquatting/slopsquatting as the default threat model.
+
 ## Edge Cases
 
 ### Repos with no dependencies
@@ -107,3 +139,10 @@ Manifest ranges (`^4.18.0`) are fine — the lockfile pins what you actually ins
 - [osv-scanner](https://google.github.io/osv-scanner/)
 - [cargo audit](https://github.com/rustsec/rustsec)
 - [npm audit](https://docs.npmjs.com/cli/v10/commands/npm-audit)
+- [SLSA v1.2](https://slsa.dev/spec/v1.2/requirements)
+- [NIST SSDF SP 800-218](https://csrc.nist.gov/pubs/sp/800/218/final)
+- [OWASP A03:2025 Supply Chain](https://owasp.org/Top10/A03_2025-Software_Supply_Chain_Failures/)
+- [CISA 2026 Minimum Elements for an SBOM](https://www.cisa.gov)
+- [CNCF Software Supply Chain Best Practices](https://tag-security.cncf.io)
+- [cargo-deny](https://github.com/EmbarkStudios/cargo-deny) / [cargo-vet](https://mozilla.github.io/cargo-vet/) / [cargo-crev](https://github.com/crev-dev/cargo-crev)
+- [OpenSSF npm Best Practices](https://openssf.org/blog/2022/09/01/)

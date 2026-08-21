@@ -1,4 +1,24 @@
-# Standards Repo — Specification
+# Standards Repo: Specification
+
+## 0. Constitution (Immutable Project Rules)
+
+The constitution constrains ALL executor actions. If an action would violate these rules, the executor MUST refuse.
+
+### MACRO: System Principles
+
+```
+Standards Repo Constitution:
+1. Correctness: wrong output at any speed is useless. A check that passes on a non-compliant repo is worse than no check.
+2. No magic: explicit > implicit. Every standard, check, and dependency is declared in a document or manifest.
+3. Inward dependencies: core knows nothing about edges. The audit framework (audit.sh + audit-lib.sh) knows nothing about any specific target repo.
+4. Test what matters: one behavior per check, edge cases before happy path. Checks assert a predicate, not a vibe.
+5. Fail with context: every failed check names the rule, the predicate, and the repo it ran against.
+6. Tool-first: never hand-roll what a deterministic tool handles. Shell checks before agent judgment; shellcheck, sops, trivy, and mise do the deterministic work.
+7. No new runtime dependency without a Y-Statement: recorded in section 2.
+8. Self-auditing: the Standards repo must pass its own audit (self-consistency standard).
+```
+
+**MESO/MICRO:** Inward dependencies means check plugins never import each other and never depend on a target repo's internals; they only read files and run predicates. Tool-first means a new standard ships with a deterministic check script, not a prose promise. Every check plugin registers itself via `ALL_STANDARDS+=()` and exposes `checks_<name> <repo>`; there is no central registry to update.
 
 ## 1. Overview
 
@@ -6,17 +26,22 @@ The Standards repo is an authoritative reference library of quality standards wi
 
 Part of the meta-project trio (Process / Quality / Knowledge). The Standards repo owns quality conventions. The Dev Protocol owns process conventions. The Lessons repo owns experiential knowledge.
 
+**OUT OF SCOPE (V1):**
+- New standards beyond the 24 documented: deferred until the existing inventory is fully audited
+- A compiled audit runtime: the POSIX-shell system is the contract; no rewrite
+- Continuous monitoring or alerting: audits run on demand or on commit/PR
+
 ## 2. Architecture
 
 ```
 standards/
 ├── *.md                           # Standard definitions (what + why)
 ├── scripts/
-│   ├── audit.sh                   # CLI entry point — audit a single repo
+│   ├── audit.sh                   # CLI entry point: audit a single repo
 │   ├── audit-lib.sh               # Shared framework: _check, reporter, JSON output
 │   ├── audit-all.sh               # Batch audit across multiple repos
 │   ├── agent-check.sh             # Dispatches agent-eval requests for subjective checks
-│   ├── checks/*.sh                # One file per standard — plugins auto-discovered
+│   ├── checks/*.sh                # One file per standard: plugins auto-discovered
 │   ├── generate-badge.sh          # shields.io-style inline SVG badge generator
 │   ├── set-repo-topics.sh         # Apply GitHub topic sets per repo type
 │   ├── install-ai-commit-hooks.sh # Global hook installer (pre-commit, pre-push, prepare-commit-msg)
@@ -49,6 +74,10 @@ standards/
 ├── CHANGELOG.md                   # Keep a Changelog + SemVer
 └── README.md                      # Project index + quick start
 ```
+
+### PROJECT_MODEL: Whole-Project State Machine (MANDATORY)
+
+The Standards repo documents its whole-project state machine at `docs/PROJECT_MODEL.md`: states, valid/invalid transitions, invariants, and the blast-radius map of which standard documents and check scripts co-change. Not optional polish: the project's health contract. Every change to the standard inventory or the audit framework is a state transition and must appear in that table. See [docs/PROJECT_MODEL.md](docs/PROJECT_MODEL.md).
 
 ## 3. Intent
 
@@ -126,7 +155,7 @@ _(Additional standards exist as reference docs and cross-repo inventory entries)
 
 | Date                                      | Title                                                                        |
 | ----------------------------------------- | ---------------------------------------------------------------------------- |
-| `2026-06-23-audit-system-architecture.md` | Audit System Architecture — shell checks + agent evals + plugin architecture |
+| `2026-06-23-audit-system-architecture.md` | Audit System Architecture: shell checks + agent evals + plugin architecture |
 
 ### Supporting Scripts
 
@@ -139,7 +168,7 @@ _(Additional standards exist as reference docs and cross-repo inventory entries)
 
 ## 5. CI
 
-**GitHub Actions** — single workflow at `.github/workflows/ci.yml`:
+**GitHub Actions**: single workflow at `.github/workflows/ci.yml`:
 
 ```yaml
 on: [push, pull_request] → main
@@ -154,8 +183,8 @@ jobs:
 
 Triggers on push and PR to main. Two gates:
 
-1. **shellcheck** — all scripts must pass shellcheck at warning severity
-2. **self-audit** — `audit.sh --exit-code .` must exit 0 (the repo must conform to its own standards)
+1. **shellcheck**: all scripts must pass shellcheck at warning severity
+2. **self-audit**: `audit.sh --exit-code .` must exit 0 (the repo must conform to its own standards)
 
 The self-audit gate ensures that every standard the repo enforces externally also applies internally. Self-consistency check prevents recursive failure via `SELF_CONSISTENCY_ACTIVE` env guard.
 
@@ -203,21 +232,21 @@ make check                                       # audit-exit + shellcheck
 
 ### Output formats
 
-- **terminal** (default) — color-coded pass/fail/pending per check, summary table
-- **json** — structured results for machine consumption, stdout is pure JSON
-- **quiet** — no output, exit code only
+- **terminal** (default): color-coded pass/fail/pending per check, summary table
+- **json**: structured results for machine consumption, stdout is pure JSON
+- **quiet**: no output, exit code only
 
 Exit code 1 on any failure when `--exit-code` is set. Advisory by default (never blocks).
 
 ## 7. Non-Goals
 
-- **Not a meta-protocol** — Process conventions belong in the Dev Protocol repo, not here
-- **Not a knowledge base** — Experiential learning, post-mortems, and patterns belong in the Lessons repo
-- **Not language-specific** — All standards must apply across any language or project type. Shell-based enforcement is deliberately language-agnostic
-- **Not a CI system** — Audit scripts report status; they do not run builds, deploy artifacts, or orchestrate pipelines
-- **Not a propagation system** — Cross-repo template propagation was considered and explicitly deferred
-- **Not a linter** — Standards define what "good" means; existing language-specific linters (shellcheck, clippy, ruff) are referenced but not replaced
-- **Not real-time** — Audits run on demand or on commit/PR. No continuous monitoring or alerting
+- **Not a meta-protocol**: Process conventions belong in the Dev Protocol repo, not here
+- **Not a knowledge base**: Experiential learning, post-mortems, and patterns belong in the Lessons repo
+- **Not language-specific**: All standards must apply across any language or project type. Shell-based enforcement is deliberately language-agnostic
+- **Not a CI system**: Audit scripts report status; they do not run builds, deploy artifacts, or orchestrate pipelines
+- **Not a propagation system**: Cross-repo template propagation was considered and explicitly deferred
+- **Not a linter**: Standards define what "good" means; existing language-specific linters (shellcheck, clippy, ruff) are referenced but not replaced
+- **Not real-time**: Audits run on demand or on commit/PR. No continuous monitoring or alerting
 
 ## 8. Success Metrics
 
@@ -242,7 +271,8 @@ The Standards repo already exists and is functional. The trajectory follows four
 | PERFECT    | Current  | Protocol alignment, missing artifacts, cross-references             |
 | DISTRIBUTE | Next     | Cross-reference with Dev Protocol; integrate REVIEW.md audit checks |
 
-This specification document is part of the PERFECT phase — formalizing governance artifacts that were previously implicit.
+**Circuit breaker:** IF the self-audit (`./scripts/audit.sh --exit-code .`) fails on main THEN the project SHALL stop adding standards or checks until the audit is green again.
+This specification document is part of the PERFECT phase: formalizing governance artifacts that were previously implicit.
 
 ## 10. Dependencies
 
@@ -250,16 +280,16 @@ This specification document is part of the PERFECT phase — formalizing governa
 
 ### Optional dependencies (for specific features)
 
-| Tool           | Required by                      | Purpose                               |
-| -------------- | -------------------------------- | ------------------------------------- |
-| `python3`      | `dashboard.sh`                   | JSON parsing, HTML generation         |
-| `jq`           | `dashboard.sh` (fallback)        | JSON parsing when python3 unavailable |
-| `shellcheck`   | CI, `make shellcheck`            | Script linting                        |
-| `sops` + `age` | `secrets-management-standard.md` | Encrypted secrets                     |
-| `trivy`        | `trivy-secrets` check            | Secret scanning                       |
-| `git-cliff`    | `changelog-standard.md`          | Changelog generation                  |
-| `lefthook`     | `auto-commit-gitops-standard.md` | Hook management                       |
-| `mise`         | `tool-versions-standard.md`      | Version management                    |
+| Tool           | Version (mise.toml)             | Required by                      | Purpose                               |
+| -------------- | ------------------------------- | -------------------------------- | ------------------------------------- |
+| `python3`      | system                          | `dashboard.sh`                   | JSON parsing, HTML generation         |
+| `jq`           | system                          | `dashboard.sh` (fallback)        | JSON parsing when python3 unavailable |
+| `shellcheck`   | mise: latest                    | CI, `make shellcheck`            | Script linting                        |
+| `sops` + `age` | mise: latest                    | `secrets-management-standard.md` | Encrypted secrets                     |
+| `trivy`        | mise: latest                    | `trivy-secrets` check            | Secret scanning                       |
+| `git-cliff`    | mise: latest                    | `changelog-standard.md`          | Changelog generation                  |
+| `lefthook`     | mise: latest                    | `auto-commit-gitops-standard.md` | Hook management                       |
+| `mise`         | min_version 2024.1.1            | `tool-versions-standard.md`      | Version management                    |
 
 ### Meta-dependency
 
@@ -297,7 +327,9 @@ The Standards repo depends on the Dev Protocol for its governance structure (pha
 | Badges           | `docs/badges/*.svg`         | Visual status indicators                  |
 | Dashboard        | `.omo/dashboard/index.html` | Live cross-repo compliance                |
 
-**External references** — Standards may reference authoritative external sources (OWASP, NASA, RFC 6761, Keep a Changelog, SemVer) where they exist. The standard defines how we apply them, not what they say.
+**External references**: Standards may reference authoritative external sources (OWASP, NASA, RFC 6761, Keep a Changelog, SemVer) where they exist. The standard defines how we apply them, not what they say.
+
+**Research verification**: decision-relevant claims in this specification are verified per the Research-on-Demand tiers (L0-L3) from the Development Protocol's LANDSCAPE.md. The verification record, with sources that exist and support each claim, is at [docs/RESEARCH_VERIFICATION.md](docs/RESEARCH_VERIFICATION.md).
 
 ## 13. AI Attribution
 
@@ -313,19 +345,43 @@ The Standards repo was built with AI assistance. All standard documents, audit s
 
 Details: `CREDITS.md`, `docs/badges/` with per-model SVG badges. Human direction, review, and approval by B67687.
 
-## 14. Verification Checklist
+## 14. Ecosystem & Community (Tier 3)
 
-- [ ] All 31 standards documents exist (23 with dedicated check scripts, 8 additional identified)
-- [ ] All 152 checks execute without error against a compliant repo
-- [ ] `./scripts/audit.sh --exit-code .` passes on the Standards repo itself
-- [ ] `make shellcheck` passes for all scripts
-- [ ] All 23 check plugins auto-register via `scripts/checks/*.sh`
-- [ ] Cross-repo dashboard generates via `./scripts/audit-all.sh -d <dir> && ./scripts/dashboard.sh`
-- [ ] Self-consistency check does not recursively fail (env guard works)
-- [ ] --list-standards outputs all registered standard IDs
-- [ ] JSON output is valid JSON (parseable by python3/jq)
-- [ ] No hardcoded paths exist in any audit script
-- [ ] --fix mode only applies additive, safe changes
-- [ ] Every standard document follows the What/When/Where/Format/Scope pattern
-- [ ] cross-repo-standards.md is kept in sync with actual standard check files
-- [ ] CI workflow runs on every push and PR to main
+### MACRO: Governance
+
+```
+License: MIT (SPDX: MIT)
+Contribution model: PR-based, single maintainer (B67687); contribution breakdown in README
+Code of conduct: not yet adopted (single maintainer); SECURITY.md defines the security reporting path
+Consumers: this repo is the knowledge backend for the /solve skill and the source of the
+  Development-Protocol governance standards enforced across the ithmb and standards repos
+Standards compliance: Conventional Commits, editorconfig, typos, commitlint, pre-commit,
+  gitleaks secret scan, shellcheck for scripts, SPDX license headers where applicable
+```
+
+**MESO/MICRO:** Upstream references: the Development-Protocol (REVIEW gate, LANDSCAPE.md
+research tiers, RULES/SPEC/EXPLAINER conventions) and the external authorities cited by each
+standard (OWASP, NIST, SLSA, NASA, RFC 6761, Keep a Changelog, SemVer). Downstream: the
+repositories that adopt these standards (Ithmb-Codec, Ithmb-Codec-Web, Imageglass-Ithmb-Plugin)
+and any project that imports a standard from this knowledge base. PR requirements: audit
+green (`make audit-exit`), tests pass, Conventional Commit message, standards table in
+README kept in sync with any new or changed standard.
+
+## 15. Verification Checklist (Executor Reads Before Starting)
+
+- [ ] All `{{placeholders}}` across all sections are filled
+- [ ] No "TODO" or "TBD" remains
+- [ ] Constitution (section 0) has at least 3 principles
+- [ ] Out-of-scope list (section 1) is non-empty
+- [ ] Each architecture decision (section 2) includes a Y-Statement
+- [ ] Each dependency (section 10) has a version constraint
+- [ ] Timeline (section 9) has a circuit breaker condition
+- [ ] Tier 1 sections 0-7 are fully filled
+- [ ] Tier 2 sections 8-11 are filled for production projects
+- [ ] Tier 3 sections 12-14 are filled for open-source projects
+- [ ] **Spec self-consistency grep**: run `grep -n "Step " SPEC.md` and confirm step/phase numbering is monotonic with no duplicates before EXECUTOR starts
+- [ ] **FEATURES.md** exists (docs/FEATURES.md): every IN SCOPE item is an `approved` entry; no `applied` feature lacks linked tests; statuses are valid (proposed/approved/applied/archived). For the Standards repo the feature inventory is the standards table in README.md and cross-repo-standards.md
+- [ ] **Test anchoring**: every test references a check ID or standard ID (e.g., `tool-versions`); a test proving no contract is flagged, not silently carried
+- [ ] **PROJECT_MODEL**: docs/PROJECT_MODEL.md exists and the change under review appears as a transition
+- [ ] **Research verification**: decision-relevant claims carry a verification tier and a source that exists (docs/RESEARCH_VERIFICATION.md)
+- [ ] **Baseline**: test count and audit pass counts recorded for the next review to compare (see .omo/reviews/)
