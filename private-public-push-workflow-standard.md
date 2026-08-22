@@ -17,9 +17,8 @@ Every project under this standard uses FOUR named layers. The local-dev layer is
 
 **Remote naming differs by project family — do not mix these up:**
 
-- **Web projects** (e.g. Ithmb-Codec-Web): `origin` = github-public, `dev` = github-dev.
-- **Codec/plugin projects** (e.g. Ithmb-Codec, Imageglass-Ithmb-Plugin, Standards): `origin` = github-dev, `public` = github-public.
-
+- All projects use the same remote naming: `origin` = github-dev, `public` = github-public.
+- Previously, web-family projects used `origin` = public, `dev` = github-dev — this is NO LONGER TRUE (Ithmb-Codec-Web was fixed to match the standard naming during 2026-08-22 remediation).
 **CI billing caveat (Actions)**: GitHub Actions free minutes apply to PUBLIC repos. A private github-dev repo gets NO Actions. Workaround: temporarily flip github-dev PUBLIC (`gh repo edit <owner>/<Project>-Dev --visibility public`), run/rerun CI, then flip back to PRIVATE. The safety guard: github-dev must never hold local-dev (airlock) content — private test files / handovers — or the public window leaks it.
 
 ## Why
